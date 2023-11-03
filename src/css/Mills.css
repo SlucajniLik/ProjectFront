@@ -2,7 +2,9 @@ svg{
 
 width: 700px;
 height: 700px;
-background-color: brown;
+background-color:rgb(123, 63, 0);
+border: 10px solid rgb(129, 65, 65);
+
 
 }
 
@@ -17,6 +19,6 @@ stroke-width: 0.3;
 .boardCircle:hover {
 
 
-    fill: red;
+    fill:yellow;
     cursor: pointer;
 }

@@ -134,10 +134,14 @@ function onClickCircle(square,index)
 <Board position={20}  onClickCircle={onClickCircle}  />
 <Board position={30}  onClickCircle={onClickCircle}  />
 
-{pieces.map(({square,index,color})=><Piece key={`${square}-${index}-${color}`} square={square}index={index} color={color} />)}
 
+
+{/*pieces.map(({square,index,color})=>{ <Piece key={`${square}-${index}-${color}`} square={square}index={index} color={color} />   })*/}
+   
+{pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square}index={index} color={color} />)}
 
 </svg>
+
     )
 
 
