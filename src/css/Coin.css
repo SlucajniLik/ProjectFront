@@ -1,0 +1,28 @@
+.coin
+{
+    width:60px;
+    height:60px;
+   
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translate(-50%, -50%);
+}
+
+.coin img {
+
+width:100%;
+height:100%;
+position: absolute;
+z-index: 1;
+
+}
+
+.coin span {
+
+    font-weight: bold;
+    z-index: 2;
+}
+
+

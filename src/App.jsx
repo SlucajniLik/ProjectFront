@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import Mills from './components/Mills'
+import Mills from './componentsMills/Mills'
 import axios from 'axios'
+import Traveler from './componentsTraveler/Traveler'
 
 
 function App() {
@@ -11,6 +12,15 @@ function App() {
 const [data,setData]=useState(null)
 const [loading,setLoading]=useState(true)
 const [error,setError]=useState(null)
+
+
+///////
+
+const [games,setGames]=useState(0)
+
+
+
+
 
 useEffect(
 ()=>{
@@ -20,7 +30,7 @@ async function effect()
 
 setLoading(true)
 try{
-  const response = await axios.post('http://127.0.0.1:8000/Mills/Hello/',{name:'amin',code:7889})
+ // const response = await axios.post('http://127.0.0.1:8000/Mills/Hello/',{name:'amin',code:7889})
    setData(response.data)
    setError(null)
 
@@ -48,7 +58,7 @@ if(error)
   <p>{JSON.stringify(error)}</p>
 }
 
-  return (
+  /*return (
     <>
     <h1>{data.message}</h1>
     <h1>{data.code}</h1>
@@ -56,7 +66,30 @@ if(error)
 
 
    </>
+  )*/
+
+  return (
+    <>
+   
+<button  onClick={()=>{setGames(0)}}>Pytnik</button>
+<button  onClick={()=>{setGames(1)}}>Mills</button>
+
+
+
+
+{  games==0 && <Traveler/>}
+{  games==1 && <Mills/>}
+
+   </>
   )
+
+
+
+
+
+
+
+
 }
 
 export default App
