@@ -17,3 +17,14 @@
   background-image: url('../assets/terrain.png');
   position: relative;
 }
+
+#game{
+  display: flex;
+}
+
+#score{
+  width: 200px;
+  background-color: black;
+  color: lightgreen;
+  font-weight: bold;
+}
