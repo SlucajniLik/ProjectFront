@@ -49,7 +49,7 @@ function startAuto()
         setTimeout(
             ()=>{
                 step()
-                console.log(i+'DDDDDDDDDDDDDDDD')
+               
           },1000*i) 
 
     }*/
@@ -84,7 +84,7 @@ function startAuto()
 
 
 const keyPress=(e) =>
-{
+{  e.target.blur()
 
     console.log("pretisnut sam")
 if(e.keyCode == 32)
@@ -92,6 +92,7 @@ if(e.keyCode == 32)
 
   if(mode==='step')
   {
+   
    step();
  
   }
@@ -112,8 +113,11 @@ useEffect(()=>
     
     
     document.body.addEventListener('keypress',keyPress);
+   
     
-    return ()=>document.body.removeEventListener('keypress',keyPress);
+    return ()=>{document.body.removeEventListener('keypress',keyPress)
+
+ };
 }
 ,[mode,currrentStep,path])
 
