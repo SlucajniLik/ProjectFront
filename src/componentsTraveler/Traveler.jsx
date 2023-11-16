@@ -32,7 +32,7 @@ function step(){
   if(currrentStep === path.length-1) return ;
 
  setStepsTaken([...stepsTaken,{id:currrentStep,from:path[currrentStep],to:path[currrentStep+1]}])
-  setCurrentStep(s =>s+1)
+  setCurrentStep((prevStep) => prevStep + 1)
 
 
 
@@ -44,7 +44,7 @@ function step(){
 function startAuto()
 {
 
-for(var i=0;i<path.length-1;i++)
+/*for(var i=0;i<path.length-1;i++)
     {
         setTimeout(
             ()=>{
@@ -52,12 +52,12 @@ for(var i=0;i<path.length-1;i++)
                 console.log(i+'DDDDDDDDDDDDDDDD')
           },1000*i) 
 
-    }
+    }*/
 
 
 //provera
 
-/* for (const i in path)
+ /*for (const i in path)
  {
     setTimeout(
         ()=>{
@@ -65,6 +65,18 @@ for(var i=0;i<path.length-1;i++)
            
       },1000*i) 
   }*/
+
+  function autoStep(index) {
+    if (index === path.length - 1) return;
+    setTimeout(() => {
+      step();
+      autoStep(index + 1);
+    }, 1000);
+  }
+
+  autoStep(0);
+
+
 
 }
 
