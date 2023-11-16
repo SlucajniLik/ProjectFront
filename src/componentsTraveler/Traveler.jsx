@@ -21,23 +21,36 @@ const path1 =[0,1,2,3,4,5,6,7,0]
 const [path,setPath]=useState(path0)
 const currentCoin=path[currrentStep]
 
-const[mode,setMode]=useState("auto")
-console.log(currrentStep+" aaaaa")
+const[mode,setMode]=useState("step")
 
 const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
 console.log("Da li se ponovo renderujem")
-
 function step(){
 //?
   if(currrentStep === path.length-1) return ;
 
- setStepsTaken([...stepsTaken,{id:currrentStep,from:path[currrentStep],to:path[currrentStep+1]}])
+ //setStepsTaken([...stepsTaken,{id:currrentStep,from:path[currrentStep],to:path[currrentStep+1]}])
   setCurrentStep((prevStep) => prevStep + 1)
-
+  //setCurrentStep(currrentStep+1)
+///????
 
 
 
 }
+function stepBack(){
+  //?
+    if(currrentStep === 0) return ;
+  
+   //setStepsTaken([...stepsTaken,{id:currrentStep,from:path[currrentStep],to:path[currrentStep+1]}])
+    setCurrentStep((prevStep) => prevStep - 1)
+    //setCurrentStep(currrentStep+1)
+  ///????
+  
+  
+  
+  }
+  
+  
 
 
 
@@ -50,14 +63,14 @@ function startAuto()
             ()=>{
                 step()
                
-          },1000*i) 
+          },i*1000) 
 
     }*/
 
 
 //provera
 
- /*for (const i in path)
+ /*for (let i in path)
  {
     setTimeout(
         ()=>{
@@ -66,7 +79,7 @@ function startAuto()
       },1000*i) 
   }*/
 
-  function autoStep(index) {
+ function autoStep(index) {
     if (index === path.length - 1) return;
     setTimeout(() => {
       step();
@@ -85,10 +98,22 @@ function startAuto()
 
 const keyPress=(e) =>
 {  e.target.blur()
+  e.preventDefault()
+   // console.log('Focused Element:', e.target);
+   // console.log("pretisnut sam")
 
-    console.log("pretisnut sam")
+  
 if(e.keyCode == 32)
 {
+  if(mode==='auto')
+  {
+   startAuto()
+  } 
+
+}
+else if(e.keyCode == 39)
+{
+  console.log(e.keyCode)
 
   if(mode==='step')
   {
@@ -96,12 +121,22 @@ if(e.keyCode == 32)
    step();
  
   }
-  else if(mode==='auto')
-  {
-   startAuto()
-  } 
+  
 }
-else if(e.keyCode===115)
+
+else if(e.keyCode == 37)
+{
+  console.log(e.keyCode)
+
+  if(mode==='step')
+  {
+   
+   stepBack();
+ 
+  }
+  
+}
+else if(e.keyCode===83)
 {
     setMode(mode==='auto'? 'step':'auto')
 }
@@ -111,11 +146,12 @@ else if(e.keyCode===115)
 useEffect(()=>
 {
     
-    
-    document.body.addEventListener('keypress',keyPress);
+  console.log('currentStep:', currrentStep);
+  console.log('path.length:', path.length-1);
+    document.body.addEventListener('keydown',keyPress);
    
     
-    return ()=>{document.body.removeEventListener('keypress',keyPress)
+    return ()=>{document.body.removeEventListener('keydown',keyPress)
 
  };
 }
@@ -152,7 +188,7 @@ return(
 
 <div>
 <button  onClick={()=>setAgent("Aki")}   >Aki</button>
-<button  onClick={()=>setAgent("Jocke")}   >Jocke</button>
+<button  onClick={()=>{setAgent("Jocke") }}   >Jocke</button>
 <button  onClick={()=>setAgent("Micko")}   >Micko</button>
 <button  onClick={()=>setAgent("Uki")}   >Uki</button>
 </div>
