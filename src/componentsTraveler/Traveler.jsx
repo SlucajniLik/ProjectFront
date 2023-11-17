@@ -22,7 +22,7 @@ const [path,setPath]=useState(path0)
 const currentCoin=path[currrentStep]
 
 const[mode,setMode]=useState("step")
-
+const [once,setOnce]=useState(false)
 const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
 console.log("Da li se ponovo renderujem")
 function step(){
@@ -80,8 +80,11 @@ function startAuto()
   }*/
 
  function autoStep(index) {
-    if (index === path.length - 1) return;
-    setTimeout(() => {
+    if (index === path.length - 1) {
+      
+      setOnce(false)
+      return};
+    const tmId=setTimeout(() => {
       step();
       autoStep(index + 1);
     }, 1000);
@@ -101,17 +104,9 @@ const keyPress=(e) =>
   e.preventDefault()
    // console.log('Focused Element:', e.target);
    // console.log("pretisnut sam")
-
-  
-if(e.keyCode == 32)
-{
-  if(mode==='auto')
-  {
-   startAuto()
-  } 
-
-}
-else if(e.keyCode == 39)
+   if(mode==='step')
+   {
+     if(e.keyCode == 39)
 {
   console.log(e.keyCode)
 
@@ -136,11 +131,34 @@ else if(e.keyCode == 37)
   }
   
 }
-else if(e.keyCode===83)
+   }
+else if((mode==='auto'))
+{
+  if(e.keyCode == 32)
+{
+
+  
+  if(once==false )
+  {
+   startAuto();
+   setOnce(true)
+  
+  }
+  else
+  {
+    console.log("paused")
+    
+  }
+
+  
+}
+}
+ if(e.keyCode===83 && (mode==="auto" || mode==="step"))
 {
     setMode(mode==='auto'? 'step':'auto')
 }
 }
+
 
 
 useEffect(()=>
