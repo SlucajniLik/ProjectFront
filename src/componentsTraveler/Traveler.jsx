@@ -25,6 +25,210 @@ const[mode,setMode]=useState("step")
 const [once,setOnce]=useState(false)
 const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
 console.log("Da li se ponovo renderujem")
+
+
+
+
+
+
+
+function createMatrixFromExisting(existingMatrix) {
+  const rows = existingMatrix.length;
+  const cols = existingMatrix[existingMatrix.length-1].length-1;
+  var newMatrix = [];
+
+  for (let i = 0; i < rows; i++) {
+    newMatrix[i] = [];
+    for (let j = 0; j < cols; j++) {
+      // Copy the value from the existing matrix to the new matrix
+      if(existingMatrix[i][j+2]==null)
+      {
+        newMatrix[i][j]=0
+      }
+      else
+      {
+        newMatrix[i][j] = existingMatrix[i][j+2];
+      }
+      
+      
+    }
+  }
+
+
+
+
+
+
+ for (let i = 0; i < newMatrix.length; i++) {
+    for (let j = 0; j < newMatrix[newMatrix.length-1].length; j++) {
+      // Copy the value from the existing matrix to the new matrix
+      if(newMatrix[i][j]!=0)
+      {
+        newMatrix[j][i]=newMatrix[i][j]
+      }
+     
+    }
+  }
+
+
+
+
+
+  
+
+  return newMatrix;
+}
+
+
+
+
+
+
+
+
+const mt = createMatrixFromExisting(map);
+
+
+for (let i = 0; i <mt.length; i++) {
+  console.log(mt[i]);
+}
+
+function greedyDFS(matrix) {
+  const numNodes = matrix.length;
+  const visited = new Array(numNodes).fill(false);
+  const path = [];
+
+  function findMinCostNode(currentNode) {
+    let minCost = Infinity;
+    let nextNode = null;
+
+    for (let i = 0; i < numNodes; i++) {
+      if (!visited[i] && matrix[currentNode][i] < minCost) {
+        minCost = matrix[currentNode][i];
+        nextNode = i;
+      } else if (!visited[i] && matrix[currentNode][i] === minCost) {
+        // If cost is the same, choose the one with a smaller node ID
+        nextNode = Math.min(nextNode, i);
+      }
+    }
+
+    return nextNode;
+  }
+
+  function dfs(currentNode) {
+    visited[currentNode] = true;
+    path.push(currentNode);
+
+    const nextNode = findMinCostNode(currentNode);
+
+    if (nextNode !== null) {
+      dfs(nextNode);
+    }
+  }
+
+  for (let i = 0; i < numNodes; i++) {
+    if (!visited[i]) {
+      dfs(i);
+    }
+  }
+
+  // Add the return trip to the initial node at the end of the path
+  path.push(path[0]);
+
+  return path;
+}
+
+// Example usage with the provided matrix
+const costMatrix = [
+  [0, 7, 6, 10, 13],
+  [7, 0, 7, 10, 10],
+  [6, 7, 0, 8, 9],
+  [10, 10, 8, 0, 6],
+  [13, 10, 9, 6, 0]
+];
+
+const resultPath = greedyDFS(costMatrix);
+console.log('Greedy DFS Path:', resultPath);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function step(){
 //?
   if(currrentStep === path.length-1) return ;
@@ -194,12 +398,14 @@ return(
     setMap(maps[0])
     setCurrentStep(0)
     setPath(path0)
+   
   
     
     }}   >Map 0</button>
 <button  onClick={()=>{setMap(maps[1])
                         setCurrentStep(0)
                         setPath(path1)
+                       
                         
  }}   >Map 1</button>
 </div>
