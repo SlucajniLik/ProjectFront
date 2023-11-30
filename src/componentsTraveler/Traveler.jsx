@@ -18,12 +18,7 @@ const [stepsTaken,setStepsTaken]=useState([])
 
 const path0=[0,2,1,4,3,0]
 const path1 =[0,1,2,3,4,5,6,7,0]
-const [path,setPath]=useState(path0)
-const currentCoin=path[currrentStep]
 
-const[mode,setMode]=useState("step")
-const [once,setOnce]=useState(false)
-const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
 console.log("Da li se ponovo renderujem")
 
 
@@ -31,7 +26,7 @@ console.log("Da li se ponovo renderujem")
 
 
 
-
+////////////////////////////////////////////////stvaranje matrice
 function createMatrixFromExisting(existingMatrix) {
   const rows = existingMatrix.length;
   const cols = existingMatrix[existingMatrix.length-1].length-1;
@@ -85,14 +80,13 @@ function createMatrixFromExisting(existingMatrix) {
 
 
 
+//const costMatrix = createMatrixFromExisting(map);
 
-const mt = createMatrixFromExisting(map);
+
+////////////////////////////////////////////////stvaranje matrice
 
 
-for (let i = 0; i <mt.length; i++) {
-  console.log(mt[i]);
-}
-
+////////////////////////////////////////////////Algoritam gredy depth
 function greedyDFS(matrix) {
   const numNodes = matrix.length;
   const visited = new Array(numNodes).fill(false);
@@ -104,6 +98,7 @@ function greedyDFS(matrix) {
 
     for (let i = 0; i < numNodes; i++) {
       if (!visited[i] && matrix[currentNode][i] < minCost) {
+       
         minCost = matrix[currentNode][i];
         nextNode = i;
       } else if (!visited[i] && matrix[currentNode][i] === minCost) {
@@ -111,7 +106,7 @@ function greedyDFS(matrix) {
         nextNode = Math.min(nextNode, i);
       }
     }
-
+    console.log(minCost)
     return nextNode;
   }
 
@@ -126,16 +121,81 @@ function greedyDFS(matrix) {
     }
   }
 
-  for (let i = 0; i < numNodes; i++) {
-    if (!visited[i]) {
-      dfs(i);
-    }
-  }
+  
+      dfs(0);
+   
+  
 
   // Add the return trip to the initial node at the end of the path
   path.push(path[0]);
 
   return path;
+}
+//const resultPath = greedyDFS(costMatrix);
+////////////////////////////////////////////////Algoritam gredy depth
+
+
+
+
+// Example usage with the provided matrix
+
+///////////////////////////////////////////// Brute force
+function bruteForceTSP(matrix) {
+  const numNodes = matrix.length;
+
+  // Function to calculate the total distance of a path
+  function calculateTotalDistance(path) {
+    let totalDistance = 0;
+    for (let i = 0; i < path.length - 1; i++) {
+      totalDistance += matrix[path[i]][path[i + 1]];
+    }
+    totalDistance += matrix[path[path.length - 1]][path[0]]; // Return to the starting position
+    return totalDistance;
+  }
+
+  // Generate all possible permutations of nodes
+  function generatePermutations(nodes) {
+    const permutations = [];
+
+    function permute(currentPath, remainingNodes) {
+      if (remainingNodes.length === 0) {
+        permutations.push([...currentPath, currentPath[0]]); // Return to the starting position (node 0)
+        return;
+      }
+
+      for (let i = 0; i < remainingNodes.length; i++) {
+        const newNode = remainingNodes[i];
+        const updatedPath = [...currentPath, newNode];
+        const updatedRemainingNodes = remainingNodes.filter(node => node !== newNode);
+        permute(updatedPath, updatedRemainingNodes);
+      }
+    }
+    ///shallowCopy nodes.slice()????
+
+    permute([0], nodes.slice()); // Start with the initial position (node 0)
+    return permutations;
+  }
+
+  // Find the path with the minimum cost
+  let minCost = Infinity;
+  let minCostPath = [];
+
+  const allNodes = Array.from({ length: numNodes - 1 }, (_, i) => i + 1); // Exclude the initial position (node 0)
+  const allPermutations = generatePermutations(allNodes);
+console.log(allPermutations)
+  for (const path of allPermutations) {
+    console.log(path)
+    const currentCost = calculateTotalDistance(path);
+    console.log("currentCost"+minCost)
+    if (currentCost < minCost) {
+      minCost = currentCost;
+      console.log("MinCost"+minCost)
+      minCostPath = path;
+      console.log("MinCostPath"+minCostPath)
+    }
+  }
+
+  return { path: minCostPath, totalDistance: minCost };
 }
 
 // Example usage with the provided matrix
@@ -147,85 +207,31 @@ const costMatrix = [
   [13, 10, 9, 6, 0]
 ];
 
-const resultPath = greedyDFS(costMatrix);
+const resultPath = bruteForceTSP(costMatrix);
+console.log('Brute-Force TSP Path:', resultPath.path);
+console.log('Total Distance:', resultPath.totalDistance);
+
+
+////////////////////////////////////////////Brute force
+
+
+
+
+
+
+
+
+
+
+
+
+const [path,setPath]=useState(resultPath.path)
+const currentCoin=path[currrentStep]
+
+const[mode,setMode]=useState("step")
+const [once,setOnce]=useState(false)
+const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
 console.log('Greedy DFS Path:', resultPath);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -397,14 +403,15 @@ return(
      
     setMap(maps[0])
     setCurrentStep(0)
-    setPath(path0)
-   
+    //setPath(path0)
+    setPath(resultPath)
   
     
     }}   >Map 0</button>
 <button  onClick={()=>{setMap(maps[1])
                         setCurrentStep(0)
-                        setPath(path1)
+                        //setPath(path1)
+                        setPath(resultPath)
                        
                         
  }}   >Map 1</button>
