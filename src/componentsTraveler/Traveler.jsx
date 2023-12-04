@@ -184,7 +184,7 @@ function bruteForceTSP(matrix) {
   const allPermutations = generatePermutations(allNodes);
 console.log(allPermutations)
   for (const path of allPermutations) {
-    console.log(path)
+   
     const currentCost = calculateTotalDistance(path);
     console.log("currentCost"+minCost)
     if (currentCost < minCost) {
@@ -198,7 +198,7 @@ console.log(allPermutations)
   return { path: minCostPath, totalDistance: minCost };
 }
 
-// Example usage with the provided matrix
+
 const costMatrix = [
   [0, 7, 6, 10, 13],
   [7, 0, 7, 10, 10],
@@ -214,7 +214,153 @@ console.log('Total Distance:', resultPath.totalDistance);
 
 ////////////////////////////////////////////Brute force
 
+////////////////////////////////////Branch nad Bound
 
+class Node {
+
+constructor(current_node,cost,path)
+{
+  this.current_node=current_node
+  this.cost=cost
+  this.path=path
+}
+}
+
+function branchAndBounbd(graph) {
+
+ const numOfNodes=graph.length
+
+let pathQueue=[new Node(0,0,[0])]
+
+
+
+
+
+while(pathQueue.length>0)
+{
+ console.log("Path queue:"+JSON.stringify(pathQueue))
+
+  const currentNode = pathQueue.shift();
+
+
+
+   console.log("trenutni node: "+currentNode.current_node+" trenutna cena: "+currentNode.cost+" trenutni put : "+currentNode.path)
+
+
+if(currentNode.path.length==numOfNodes+1)
+{
+
+  console.log("optimalni node1: "+currentNode.current_node+" optimalni cena1: "+currentNode.cost+" optimalni put1 : "+currentNode.path)
+
+return
+}
+
+
+
+
+
+  const children = graph[currentNode.current_node]
+
+
+
+
+for(let  i = 0; i<children.length; i++ )
+{
+if(children[i]!=0  && !currentNode.path.includes(i) && currentNode.path.length<children.length )
+{
+  const newPath=currentNode.path.slice()
+  
+   newPath.push(i)
+
+ const newCost = currentNode.cost+children[i]
+
+ const newNode = new Node(i,newCost,newPath)
+
+
+pathQueue.push(newNode)
+
+
+}
+
+
+if(currentNode.path.length==children.length)
+{
+  const newPath=currentNode.path.slice()
+  
+  newPath.push(0)
+
+const newCost = currentNode.cost+children[0]
+
+const newNode = new Node(0,newCost,newPath)
+
+
+pathQueue.push(newNode)
+break;
+}
+
+} 
+
+pathQueue.sort((a,b)=>
+{
+if(a.cost!==b.cost)
+{
+return a.cost-b.cost
+}
+
+if(a.path.length!==b.path.length)
+{
+   return b.path.length-a.path.length
+}
+
+return a.current_node-b.current_node
+
+
+}
+
+
+)
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+  
+}
+ /*const raph = [
+  [0, 29, 20, 21],
+  [29, 0, 15, 17],
+  [20, 15, 0, 28],
+  [21, 17, 28, 0],
+];*/
+
+const raph = [
+  [0, 7, 6, 10, 13],
+  [7, 0, 7, 10, 10],
+  [6, 7, 0, 8, 9],
+  [10, 10, 8, 0, 6],
+  [13, 10, 9, 6, 0]
+
+];
+
+
+
+branchAndBounbd(raph)
+
+
+///////////////////////////////////////////////Branch and Bound
 
 
 
@@ -386,6 +532,83 @@ useEffect(()=>
 ,[mode,currrentStep,path])
 
 
+///////////////////////////////////////primer
+
+
+
+  class TSPNode {
+    constructor(value, cost, path) {
+      this.value = value
+      this.cost = cost
+      this.path = path
+    }
+  }
+
+function branchAndBoundTSPa(graph) {
+  const numNodes = graph.length;
+
+  // Initialize the priority queue with the starting node
+  let priorityQueue = [new TSPNode(0, 0, [0])];
+
+  while (priorityQueue.length > 0) {
+    priorityQueue.sort((a, b) => a.cost - b.cost);
+    const currentNode = priorityQueue.shift();
+
+    // If all nodes are visited, return to the starting node
+    if (currentNode.path.length === numNodes) {
+      currentNode.path.push(0); // Return to the starting node
+      console.log("Optimal Path:", currentNode.path);
+      console.log("Total Cost:", currentNode.cost);
+      return true; // Search successful
+    }
+
+    const neighbors = graph[currentNode.value];
+
+    for (let i = 0; i < neighbors.length; i++) {
+      if (neighbors[i] !== 0 && !currentNode.path.includes(i)) {
+        const newPath = currentNode.path.slice();
+        newPath.push(i);
+
+        const newCost = currentNode.cost + neighbors[i];
+
+        const newNode = new TSPNode(i, newCost, newPath);
+        priorityQueue.push(newNode);
+      }
+    }
+  }
+
+  console.log("Optimal path not found.");
+  return false; // Search unsuccessful
+}
+
+// Example graph for the Traveling Salesman Problem
+const graph = [
+  [0, 29, 20, 21],
+  [29, 0, 15, 17],
+  [20, 15, 0, 28],
+  [21, 17, 28, 0],
+];
+
+// Execute the Branch and Bound algorithm for TSP
+branchAndBoundTSPa(graph);
+
+
+
+
+//////////////////////////////////////primer
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -443,4 +666,5 @@ return(
 
 
 )
+
 }
