@@ -213,9 +213,9 @@ console.log('Total Distance:', resultPath.totalDistance);
 
 
 ////////////////////////////////////////////Brute force
-
+/// moji algoritmi
 ////////////////////////////////////Branch nad Bound
-
+/*
 class Node {
 
 constructor(current_node,cost,path)
@@ -320,31 +320,15 @@ return a.current_node-b.current_node
 
 )
 
-
-
-
-
-
-
-
 }
 
-
-
-
-
-
-
-
-
-  
 }
- /*const raph = [
+ const raph = [
   [0, 29, 20, 21],
   [29, 0, 15, 17],
   [20, 15, 0, 28],
   [21, 17, 28, 0],
-];*/
+];
 
 const raph = [
   [0, 7, 6, 10, 13],
@@ -359,10 +343,80 @@ const raph = [
 
 branchAndBounbd(raph)
 
-
+*/
 ///////////////////////////////////////////////Branch and Bound
 
+///////////////////////////////////////////////DepthFirst
+/*function deptFirstSearch(graph)
+{
+const numNodes = graph.length;
+const visited = new Array(numNodes).fill(false);
+visited[0] = true;
+let pathStack=[0]
 
+let path=[]
+
+while(pathStack.length>0)
+{
+let currentNode = pathStack.pop()
+visited[currentNode]=true
+path.push(currentNode)
+
+
+if(path.length==numNodes)
+{
+
+  path.push(0)
+
+  console.log("Moj greedy searchhhhhhhhhhhhhhhhhhhhhhh: "+path)
+  return
+}
+
+
+
+
+
+
+let children= graph[currentNode];
+
+let minCost = Infinity
+let nextNode = null
+
+
+for(let i=0;i<children.length;i++)
+{
+  if(!visited[i] && children[i]<minCost)
+  {
+    minCost=children[i]
+    nextNode=i
+  }
+   else if (!visited[i] && children[i] === minCost)
+   {
+    nextNode = Math.min(nextNode, i);
+   }
+
+pathStack.push(nextNode)
+
+
+
+  
+}
+}
+
+}
+
+
+const aph = [[0, 7, 6, 10, 13],
+  [7, 0, 7, 10, 10],
+  [6, 7, 0, 8, 9],
+  [10, 10, 8, 0, 6],
+  [13, 10, 9, 6, 0]]
+
+
+deptFirstSearch(aph)
+*/
+
+///////////////////////////////////////////////DepthFirst
 
 
 
@@ -530,75 +584,6 @@ useEffect(()=>
  };
 }
 ,[mode,currrentStep,path])
-
-
-///////////////////////////////////////primer
-
-
-
-  class TSPNode {
-    constructor(value, cost, path) {
-      this.value = value
-      this.cost = cost
-      this.path = path
-    }
-  }
-
-function branchAndBoundTSPa(graph) {
-  const numNodes = graph.length;
-
-  // Initialize the priority queue with the starting node
-  let priorityQueue = [new TSPNode(0, 0, [0])];
-
-  while (priorityQueue.length > 0) {
-    priorityQueue.sort((a, b) => a.cost - b.cost);
-    const currentNode = priorityQueue.shift();
-
-    // If all nodes are visited, return to the starting node
-    if (currentNode.path.length === numNodes) {
-      currentNode.path.push(0); // Return to the starting node
-      console.log("Optimal Path:", currentNode.path);
-      console.log("Total Cost:", currentNode.cost);
-      return true; // Search successful
-    }
-
-    const neighbors = graph[currentNode.value];
-
-    for (let i = 0; i < neighbors.length; i++) {
-      if (neighbors[i] !== 0 && !currentNode.path.includes(i)) {
-        const newPath = currentNode.path.slice();
-        newPath.push(i);
-
-        const newCost = currentNode.cost + neighbors[i];
-
-        const newNode = new TSPNode(i, newCost, newPath);
-        priorityQueue.push(newNode);
-      }
-    }
-  }
-
-  console.log("Optimal path not found.");
-  return false; // Search unsuccessful
-}
-
-// Example graph for the Traveling Salesman Problem
-const graph = [
-  [0, 29, 20, 21],
-  [29, 0, 15, 17],
-  [20, 15, 0, 28],
-  [21, 17, 28, 0],
-];
-
-// Execute the Branch and Bound algorithm for TSP
-branchAndBoundTSPa(graph);
-
-
-
-
-//////////////////////////////////////primer
-
-
-
 
 
 
