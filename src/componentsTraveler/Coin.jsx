@@ -5,7 +5,7 @@ export function Coin({number,x,y})
 {
 
     return <div className='coin'   style={{left:x,top:y}}    >
-        <img src={coin} alt coin/>
+        <img src={coin} />
         <span>{number}</span>
     </div>
 }

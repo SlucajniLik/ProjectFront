@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState,useRef  } from 'react'
 import '../css/Traveler.css'
 import {maps } from '../maps'
 import { Coin } from './Coin'
@@ -19,12 +19,56 @@ const [stepsTaken,setStepsTaken]=useState([])
 const path0=[0,2,1,4,3,0]
 const path1 =[0,1,2,3,4,5,6,7,0]
 
+const [path,setPath]=useState([0,1,2,3,4,])
+const currentCoin=path[currrentStep]
+
+const[mode,setMode]=useState("step")
+const [once,setOnce]=useState(false)
+const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
+
+var graph;
+
 console.log("Da li se ponovo renderujem")
 
 
 
+useEffect(
+  ()=>{
+  
+    graph=createMatrixFromExisting(map)
+    if(agent =="Aki")
+   {
+   setPath(deptFirstSearch(graph))
+   console.log("Depth first search: "+deptFirstSearch(graph))
+   }
+   else if(agent =="Jocke")
+   {
+    setPath(bruteForceTSP(graph))
+    console.log("Brute force search: "+bruteForceTSP(graph))
+   }
+   else if(agent =="Uki")
+   {
+    setPath(branchAndBounbd(graph))
+    console.log("Branch and bound search: "+branchAndBounbd(graph))
+   }
+   else if(agent =="Micko")
+   {
+    setPath(A_Star(graph))
+    console.log("A star search: "+A_Star(graph))
+   }
 
 
+  
+  },[map,agent])
+
+
+
+
+
+
+
+
+  //graph=createMatrixFromExisting(maps[0])
 
 ////////////////////////////////////////////////stvaranje matrice
 function createMatrixFromExisting(existingMatrix) {
@@ -78,61 +122,6 @@ function createMatrixFromExisting(existingMatrix) {
 
 
 
-
-
-//const costMatrix = createMatrixFromExisting(map);
-
-
-////////////////////////////////////////////////stvaranje matrice
-
-
-////////////////////////////////////////////////Algoritam gredy depth
-function greedyDFS(matrix) {
-  const numNodes = matrix.length;
-  const visited = new Array(numNodes).fill(false);
-  const path = [];
-
-  function findMinCostNode(currentNode) {
-    let minCost = Infinity;
-    let nextNode = null;
-
-    for (let i = 0; i < numNodes; i++) {
-      if (!visited[i] && matrix[currentNode][i] < minCost) {
-       
-        minCost = matrix[currentNode][i];
-        nextNode = i;
-      } else if (!visited[i] && matrix[currentNode][i] === minCost) {
-        // If cost is the same, choose the one with a smaller node ID
-        nextNode = Math.min(nextNode, i);
-      }
-    }
-    console.log(minCost)
-    return nextNode;
-  }
-
-  function dfs(currentNode) {
-    visited[currentNode] = true;
-    path.push(currentNode);
-
-    const nextNode = findMinCostNode(currentNode);
-
-    if (nextNode !== null) {
-      dfs(nextNode);
-    }
-  }
-
-  
-      dfs(0);
-   
-  
-
-  // Add the return trip to the initial node at the end of the path
-  path.push(path[0]);
-
-  return path;
-}
-//const resultPath = greedyDFS(costMatrix);
-////////////////////////////////////////////////Algoritam gredy depth
 
 
 
@@ -195,27 +184,17 @@ console.log(allPermutations)
     }
   }
 
-  return { path: minCostPath, totalDistance: minCost };
+  return minCostPath;
 }
 
 
-const costMatrix = [
-  [0, 7, 6, 10, 13],
-  [7, 0, 7, 10, 10],
-  [6, 7, 0, 8, 9],
-  [10, 10, 8, 0, 6],
-  [13, 10, 9, 6, 0]
-];
-
-const resultPath = bruteForceTSP(costMatrix);
-console.log('Brute-Force TSP Path:', resultPath.path);
-console.log('Total Distance:', resultPath.totalDistance);
 
 
-////////////////////////////////////////////Brute force
-/// moji algoritmi
-////////////////////////////////////Branch nad Bound
-/*
+//const resultPath = bruteForceTSP(graph);
+
+
+
+
 class Node {
 
 constructor(current_node,cost,path)
@@ -252,7 +231,7 @@ if(currentNode.path.length==numOfNodes+1)
 
   console.log("optimalni node1: "+currentNode.current_node+" optimalni cena1: "+currentNode.cost+" optimalni put1 : "+currentNode.path)
 
-return
+return currentNode.path
 }
 
 
@@ -323,31 +302,12 @@ return a.current_node-b.current_node
 }
 
 }
- const raph = [
-  [0, 29, 20, 21],
-  [29, 0, 15, 17],
-  [20, 15, 0, 28],
-  [21, 17, 28, 0],
-];
+ 
 
-const raph = [
-  [0, 7, 6, 10, 13],
-  [7, 0, 7, 10, 10],
-  [6, 7, 0, 8, 9],
-  [10, 10, 8, 0, 6],
-  [13, 10, 9, 6, 0]
-
-];
+//branchAndBounbd(graph)
 
 
-
-branchAndBounbd(raph)
-
-*/
-///////////////////////////////////////////////Branch and Bound
-
-///////////////////////////////////////////////DepthFirst
-/*function deptFirstSearch(graph)
+function deptFirstSearch(graph)
 {
 const numNodes = graph.length;
 const visited = new Array(numNodes).fill(false);
@@ -369,7 +329,7 @@ if(path.length==numNodes)
   path.push(0)
 
   console.log("Moj greedy searchhhhhhhhhhhhhhhhhhhhhhh: "+path)
-  return
+  return path
 }
 
 
@@ -406,17 +366,231 @@ pathStack.push(nextNode)
 }
 
 
-const aph = [[0, 7, 6, 10, 13],
-  [7, 0, 7, 10, 10],
-  [6, 7, 0, 8, 9],
-  [10, 10, 8, 0, 6],
-  [13, 10, 9, 6, 0]]
 
 
-deptFirstSearch(aph)
-*/
+//deptFirstSearch(graph)
 
-///////////////////////////////////////////////DepthFirst
+class Node2 {
+
+  constructor(current_node,cost,heuristics,sum,path)
+  {
+    this.current_node=current_node
+    this.cost=cost
+    this.heuristics=heuristics
+    this.sum=sum
+    this.path=path
+    
+  }
+  }
+  
+  function A_Star(graph) {
+  
+   const numOfNodes=graph.length
+  
+  let pathQueue=[new Node2(0,0,0,0,[0])]
+  
+  let MSTcost=0
+  
+  let Temp=[]
+  
+  while(pathQueue.length>0)
+  {
+   
+   console.log("Path queue:"+JSON.stringify(pathQueue))
+  
+    const currentNode = pathQueue.shift();
+  
+
+     console.log("trenutni node: "+currentNode.current_node+" trenutna cena: "+currentNode.cost+"hEURISTIKA :"+currentNode.heuristics+"SUMA :"+currentNode.sum+" trenutni put : "+currentNode.path)
+  
+  
+  if(currentNode.path.length==numOfNodes+1)
+  {
+  
+    console.log("Optimalni node: "+currentNode.current_node+" Optimalni cena: "+currentNode.cost+"Optimalni hEURISTIKA :"+currentNode.heuristics+"Optimalni SUMA :"+currentNode.sum+"Optimalni trenutni put : "+currentNode.path)
+  
+  return currentNode.path
+  }
+  
+  
+  
+  
+  
+    const children = graph[currentNode.current_node]
+    Temp=makeMatrixForCruskal(graph)
+    let k = 0;
+
+    for (k = 1; k < currentNode.path.length; k++) {
+      Temp = Temp.filter(item =>!(item[0] === currentNode.path[k] || item[1] === currentNode.path[k]));
+      
+      
+    }
+  
+
+    console.log("Temp: "+k+"||"+JSON.stringify(Temp))
+   
+    
+ 
+  
+   console.log("rezzzzzzzzzzz:"+(Temp.length))
+    MSTcost=kruskalAlgo(Temp.length,Temp)
+   
+  for(let  i = 0; i<children.length; i++ )
+  {
+  if(children[i]!=0  && !currentNode.path.includes(i) && currentNode.path.length<children.length )
+  {
+    const newPath=currentNode.path.slice()
+    
+    
+    
+    
+     newPath.push(i)
+     
+   const newCost = currentNode.cost+children[i]
+  
+  const sum=newCost+MSTcost
+
+
+   const newNode = new Node2(i,newCost,MSTcost,sum,newPath)
+  
+  
+  pathQueue.push(newNode)
+  
+  
+  }
+  
+  
+  if(currentNode.path.length==children.length)
+  {
+    const newPath=currentNode.path.slice()
+    
+    newPath.push(0)
+  
+  const newCost = currentNode.cost+children[0]
+  const sum=newCost+MSTcost
+  const newNode = new Node2(0,newCost,MSTcost,sum,newPath)
+  
+  
+  pathQueue.push(newNode)
+  break;
+  }
+  
+  } 
+  
+  pathQueue.sort((a,b)=>
+  {
+  if(a.sum!==b.sum)
+  {
+  return a.sum-b.sum
+  }
+  
+  if(a.path.length!==b.path.length)
+  {
+     return b.path.length-a.path.length
+  }
+  
+  return a.current_node-b.current_node
+  
+  
+  }
+  
+  
+  )
+  
+  }
+  
+  }
+ 
+  
+  
+  
+ //A_Star(graph)
+
+ 
+
+function makeSet(parent,rank,n) 
+{ 
+	for(let i=0;i<n;i++) 
+	{ 
+		parent[i]=i; 
+		rank[i]=0; 
+	} 
+} 
+
+function findParent(parent,component) 
+{ 
+	if(parent[component]==component) 
+		return component; 
+
+	return parent[component] = findParent(parent,parent[component]); 
+} 
+
+function unionSet(u, v, parent, rank,n) 
+{ 
+	//this function unions two set on the basis of rank 
+	//as shown below 
+	u=findParent(parent,u); 
+	v=findParent(parent,v); 
+
+	if(rank[u]<rank[v]) 
+	{ 
+		parent[u]=v; 
+	} 
+	else if(rank[u]<rank[v]) 
+	{ 
+		parent[v]=u; 
+	} 
+	else
+	{ 
+		parent[v]=u; 
+		rank[u]++;//since the rank increases if the ranks of two sets are same 
+	} 
+} 
+
+function kruskalAlgo(n, edge) 
+{ 
+	//First we sort the edge array in ascending order 
+	//so that we can access minimum distances/cost 
+	edge.sort((a, b)=>{ 
+		return a[2] - b[2]; 
+	}) 
+	//inbuilt quick sort function comes with stdlib.h 
+	//go to https://www.geeksforgeeks.org/comparator-function-of-qsort-in-c/ 
+	//if there is any doubt regarding the function 
+	let parent = new Array(n); 
+	let rank = new Array(n); 
+
+	makeSet(parent,rank,n);//function to initialize parent[] and rank[] 
+
+	let minCost=0;//to store the minimun cost 
+
+	for(let i=0;i<n;i++) 
+	{ 
+		let v1=findParent(parent,edge[i][0]); 
+		let v2=findParent(parent,edge[i][1]); 
+		let wt=edge[i][2]; 
+
+		if(v1!=v2)//if the parents are different that means they are in 
+				//different sets so union them 
+		{ 
+			unionSet(v1,v2,parent,rank,n); 
+			minCost+=wt; 
+			console.log(edge[i][0] + " -- " + edge[i][1] + " == " + wt); 
+		} 
+	} 
+
+
+  return minCost
+} 
+
+
+//Here 5 is the number of edges, can be asked from the user 
+//when making the graph through user input 
+//3 represents the no of index positions for storing u --> v(adjacent vertices) 
+//and its cost/distance; 
+
+
+// The code is contributed by Arushi Jindal. 
 
 
 
@@ -425,13 +599,68 @@ deptFirstSearch(aph)
 
 
 
-const [path,setPath]=useState(resultPath.path)
-const currentCoin=path[currrentStep]
 
-const[mode,setMode]=useState("step")
-const [once,setOnce]=useState(false)
-const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
-console.log('Greedy DFS Path:', resultPath);
+
+
+
+
+
+
+
+
+function makeMatrixForCruskal(matrix)
+{
+const numNodes = matrix.length;
+const visited = new Array(numNodes).fill(false);
+
+
+let newMatrix=[]
+let newNode=[]
+
+for(let i=0;i<matrix.length;i++)
+{
+  
+for(let j=0;j<matrix[i].length;j++)
+{
+    if(matrix[i][j]!=0 && !visited[j])
+ 
+newMatrix.push([i,j,matrix[i][j]])
+  
+}
+visited[i]=true
+}
+
+
+return newMatrix
+
+
+}
+
+
+
+
+
+
+//////////////////////////////////////////Cruscal
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//const [path,setPath]=useState(resultPath.path)
+
+
 
 
 
@@ -439,7 +668,11 @@ function step(){
 //?
   if(currrentStep === path.length-1) return ;
 
- //setStepsTaken([...stepsTaken,{id:currrentStep,from:path[currrentStep],to:path[currrentStep+1]}])
+  graph=createMatrixFromExisting(map)
+
+console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+currrentStep)
+
+ setStepsTaken(stepsTaken=>[...stepsTaken,{id:currentStepRef.current,from:path[currentStepRef.current],to:path[currentStepRef.current+1],price:graph[path[currentStepRef.current]][path[currentStepRef.current+1]]}])
   setCurrentStep((prevStep) => prevStep + 1)
   //setCurrentStep(currrentStep+1)
 ///????
@@ -451,9 +684,9 @@ function stepBack(){
   //?
     if(currrentStep === 0) return ;
   
-   //setStepsTaken([...stepsTaken,{id:currrentStep,from:path[currrentStep],to:path[currrentStep+1]}])
+stepsTaken.pop()
     setCurrentStep((prevStep) => prevStep - 1)
-    //setCurrentStep(currrentStep+1)
+  
   ///????
   
   
@@ -461,7 +694,12 @@ function stepBack(){
   }
   
   
+  const currentStepRef = useRef(currrentStep);
 
+  useEffect(() => {
+    console.log(currrentStep+" aaaaaaaaaaaasasasas")
+    currentStepRef.current = currrentStep;
+  }, [currrentStep]);
 
 
 function startAuto()
@@ -492,17 +730,18 @@ function startAuto()
  function autoStep(index) {
     if (index === path.length - 1) {
       
-      setOnce(false)
+      //setOnce(false)
       return};
-    const tmId=setTimeout(() => {
+    /*const tmId=*/setTimeout(() => {
       step();
+      
       autoStep(index + 1);
     }, 1000);
   }
 
   autoStep(0);
 
-
+//setStepsTaken([])
 
 }
 
@@ -548,17 +787,11 @@ else if((mode==='auto'))
 {
 
   
-  if(once==false )
-  {
+ 
    startAuto();
-   setOnce(true)
   
-  }
-  else
-  {
-    console.log("paused")
-    
-  }
+  
+ 
 
   
 }
@@ -610,26 +843,37 @@ return(
 <button  onClick={()=>{
      
     setMap(maps[0])
+    setStepsTaken([])
     setCurrentStep(0)
-    //setPath(path0)
-    setPath(resultPath)
+   
+    
   
     
     }}   >Map 0</button>
 <button  onClick={()=>{setMap(maps[1])
+                      setStepsTaken([])
                         setCurrentStep(0)
-                        //setPath(path1)
-                        setPath(resultPath)
+                       
+                    
                        
                         
  }}   >Map 1</button>
 </div>
 
 <div>
-<button  onClick={()=>setAgent("Aki")}   >Aki</button>
-<button  onClick={()=>{setAgent("Jocke") }}   >Jocke</button>
-<button  onClick={()=>setAgent("Micko")}   >Micko</button>
-<button  onClick={()=>setAgent("Uki")}   >Uki</button>
+<button  onClick={()=>{setAgent("Aki") 
+setStepsTaken([])
+setCurrentStep(0) }  }   >Aki</button>
+<button  onClick={()=>{setAgent("Jocke") 
+setStepsTaken([])
+setCurrentStep(0)}}   >Jocke</button>
+<button  onClick={()=>{setAgent("Micko") 
+setStepsTaken([])
+setCurrentStep(0)  }}   >Micko</button>
+<button  onClick={()=>{setAgent("Uki")
+setStepsTaken([])
+setCurrentStep(0)
+}}   >Uki</button>
 </div>
 
 
@@ -642,7 +886,12 @@ return(
 <Agent  name={agent} x={agentPosition.x}  y={agentPosition.y }   />
 </div>
 <div id="score">
-{/*stepsTaken.map(({id,from,to})=><h3 key={id}>{id} | {from} - {to}</h3>)*/}
+<h3>-------Steps-------</h3>
+  <div style={{ height:'60%'}}   >
+
+{stepsTaken.map(({id,from,to,price})=><h3 key={id}>{id} | {from} - {to} :{price} </h3>)}
+</div>
+<p style={{display:'flex', justifyContent:'center',alignItems:'center'}}  >Total Price: {stepsTaken.reduce((sum, { price }) => sum + price, 0)}</p>
 </div>
 </div>
 
