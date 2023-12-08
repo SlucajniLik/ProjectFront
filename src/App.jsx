@@ -30,9 +30,9 @@ async function effect()
 
 setLoading(true)
 try{
- // const response = await axios.post('http://127.0.0.1:8000/Mills/Hello/',{name:'amin',code:7889})
+ /* const response = await axios.post('http://127.0.0.1:8000/Mills/Hello/',{name:'amin',code:7889})
    setData(response.data)
-   setError(null)
+   setError(null)*/
 
 }
 catch(e)
@@ -67,10 +67,11 @@ if(error)
 
    </>
   )*/
-
+/*<p>{data.code}</p>
+   <p>{data.message}</p>*/
   return (
     <>
-   
+  
 <button  onClick={()=>{setGames(0)}}>Pytnik</button>
 <button  onClick={()=>{setGames(1)}}>Mills</button>
 
