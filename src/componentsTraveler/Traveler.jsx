@@ -26,13 +26,13 @@ const[mode,setMode]=useState("step")
 const [imgCoin,setImgCoin]=useState(coin)
 
 const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
-
+const [pause,setPause]=useState(false)
 var graph;
 
 console.log("Da li se ponovo renderujem")
 
 const [collected, setCollected] = useState(new Array(map.length).fill(false));
-
+var tmIdArr=[]
 useEffect(
   ()=>{
   
@@ -120,7 +120,7 @@ function createMatrixFromExisting(existingMatrix) {
 
 function step(){
 //?
-  if(currrentStep === path.length-1) return ;
+  if(currentStepRef.current === path.length-1) return ;
 
   graph=createMatrixFromExisting(map)
 
@@ -194,15 +194,22 @@ function startAuto()
   }*/
 
  function autoStep(index) {
-    if (index === path.length - 1) {
+
+
+
+  if(currentStepRef.current === path.length-1) return ;
+    if (index === path.length - 1 ) {
       
-      //setOnce(false)
+    //  setOnce(false)
       return};
-    /*const tmId=*/setTimeout(() => {
+      const tm=setTimeout(() => {
+        console.log("TMMMMM:"+tm+"index:"+index)
+        tmIdArr.push(tm)
       step();
-      
+      console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"+tmIdArr)
       autoStep(index + 1);
     }, 1000);
+    
   }
 
   autoStep(0);
@@ -252,14 +259,38 @@ else if((mode==='auto'))
   if(e.keyCode == 32)
 {
 
+  if(pause==false)
+  {
+    startAuto();
+  }
+  else
+  {
+    for(let i=0;i<=(path.length-1)*(path.length-1);i++)
+    {
+      clearTimeout(i);
+     
+    }
+  }
+setPause(!pause)
+   
   
- 
-   startAuto();
-  
-  
+   
  
 
   
+}
+if(e.keyCode == 84)
+{
+
+
+  for(let i=0;i<=(path.length-1)*(path.length-1);i++)
+  {
+    clearTimeout(i);
+   
+  }
+
+
+
 }
 }
  if(e.keyCode===83 && (mode==="auto" || mode==="step"))
@@ -282,7 +313,7 @@ useEffect(()=>
 
  };
 }
-,[mode,currrentStep,path])
+,[mode,currrentStep,path,tmIdArr])
 
 
 
@@ -355,12 +386,17 @@ setCollected(new Array(map.length).fill(false))
 
 
 <div id="game" > 
-<div id="main"  >
+
+<div id="main"  > 
+
 {<h1 style={{textAlign:'center'}}>{currrentStep}</h1>  }
 {mode ==='step' && <h1 style={{textAlign:'center'}}>Step</h1>  }
+
 {map.map(([x,y],id)=> <Coin key={id} number={id} x={x} y={y} collected={collected}  />   )}
 <Agent  name={agent} x={agentPosition.x}  y={agentPosition.y }   />
+{ pause==false && currentStepRef.current>0 && currentStepRef.current<path.length-1 && mode=="auto" ?<h1  style={{color:'red'}}>Paused</h1>:<h1></h1>}
 </div>
+
 <div id="score">
 <h3>-------Steps-------</h3>
   <div style={{ height:'60%'}}   >
