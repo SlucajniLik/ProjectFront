@@ -167,7 +167,8 @@ setCollected((prevCollected) => {
     currentStepRef.current = currrentStep;
   }, [currrentStep,collected]);
 
-
+  var tmIdArr=[]
+  const arr = useRef(tmIdArr);
 function startAuto()
 {
 
@@ -192,7 +193,7 @@ function startAuto()
            
       },1000*i) 
   }*/
-
+ 
  function autoStep(index) {
 
 
@@ -203,12 +204,13 @@ function startAuto()
     //  setOnce(false)
       return};
       const tm=setTimeout(() => {
-        console.log("TMMMMM:"+tm+"index:"+index)
-        tmIdArr.push(tm)
+        
+        
       step();
-      console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"+tmIdArr)
+      
       autoStep(index + 1);
     }, 1000);
+    arr.current.push(tm)
     
   }
 
@@ -265,11 +267,21 @@ else if((mode==='auto'))
   }
   else
   {
-    for(let i=0;i<=(path.length-1)*(path.length-1);i++)
+    /*for(let i=0;i<=(path.length-1)*(path.length-1);i++)
     {
       clearTimeout(i);
      
+    }*/
+
+    for(let i=0;i<arr.current.length;i++)
+    {
+      console.log("trenutni"+arr.current[i])
+      clearTimeout(arr.current[i]);
+     
     }
+
+    arr.current=[]
+
   }
 setPause(!pause)
    
@@ -316,22 +328,6 @@ useEffect(()=>
 ,[mode,currrentStep,path,tmIdArr])
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 return(
 
 <div id="container" >
@@ -343,7 +339,7 @@ return(
     setStepsTaken([])
     setCurrentStep(0)
     setCollected(new Array(map.length).fill(false))
-  
+    setPause(false)
     
   
     
@@ -352,7 +348,7 @@ return(
                       setStepsTaken([])
                         setCurrentStep(0)
                         setCollected(new Array(map.length).fill(false))
-                        
+                        setPause(false)
                     
                        
                         
@@ -364,21 +360,25 @@ return(
 setStepsTaken([])
 setCurrentStep(0) 
 setCollected(new Array(map.length).fill(false))
+setPause(false)
 }  }   >Aki</button>
 <button  onClick={()=>{setAgent("Jocke") 
 setStepsTaken([])
 setCurrentStep(0)
 setCollected(new Array(map.length).fill(false))
+setPause(false)
 }}   >Jocke</button>
 <button  onClick={()=>{setAgent("Micko") 
 setStepsTaken([])
 setCurrentStep(0) 
 setCollected(new Array(map.length).fill(false))
+setPause(false)
  }}   >Micko</button>
 <button  onClick={()=>{setAgent("Uki")
 setStepsTaken([])
 setCurrentStep(0)
 setCollected(new Array(map.length).fill(false))
+setPause(false)
 
 }}   >Uki</button>
 </div>
