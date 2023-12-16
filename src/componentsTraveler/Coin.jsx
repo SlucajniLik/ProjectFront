@@ -14,7 +14,7 @@ export function Coin({number,x,y,collected})
     {
         return <div className='coin'   style={{left:x,top:y}}    >
         <img src={colected} />
-        <span>{number}</span>
+        <span style={{color:'red'}}  >{number}</span>
         
     
     </div>

@@ -27,6 +27,7 @@ const [imgCoin,setImgCoin]=useState(coin)
 
 const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
 const [pause,setPause]=useState(false)
+const [gameOver,setGameOver]=useState("")
 var graph;
 
 console.log("Da li se ponovo renderujem")
@@ -165,6 +166,15 @@ setCollected((prevCollected) => {
   useEffect(() => {
     console.log(currrentStep+" aaaaaaaaaaaasasasas")
     currentStepRef.current = currrentStep;
+
+
+    if(currentStepRef.current==path.length-1)
+    {
+      setTimeout(() => {
+        setGameOver("Game over")
+      }, 1000);
+    }
+
   }, [currrentStep,collected]);
 
   var tmIdArr=[]
@@ -230,6 +240,8 @@ const keyPress=(e) =>
    // console.log("pretisnut sam")
    if(mode==='step')
    {
+
+
      if(e.keyCode == 39)
 {
   console.log(e.keyCode)
@@ -246,7 +258,7 @@ const keyPress=(e) =>
 else if(e.keyCode == 37)
 {
   console.log(e.keyCode)
-
+  
   if(mode==='step')
   {
    
@@ -291,23 +303,28 @@ setPause(!pause)
 
   
 }
-if(e.keyCode == 84)
-{
 
-
-  for(let i=0;i<=(path.length-1)*(path.length-1);i++)
-  {
-    clearTimeout(i);
-   
-  }
-
-
-
-}
 }
  if(e.keyCode===83 && (mode==="auto" || mode==="step"))
 {
-    setMode(mode==='auto'? 'step':'auto')
+     if(currentStepRef.current<map.length)
+     {
+      setMode(mode==='auto'? 'step':'auto')
+     ////==step
+      if(mode=='auto')
+      {
+        setPause(false)
+        for(let i=0;i<arr.current.length;i++)
+    {
+      console.log("trenutni"+arr.current[i])
+      clearTimeout(arr.current[i]);
+     
+    }
+      }
+     }
+    
+
+   
 }
 }
 
@@ -340,7 +357,7 @@ return(
     setCurrentStep(0)
     setCollected(new Array(map.length).fill(false))
     setPause(false)
-    
+    setGameOver("")
   
     
     }}   >Map 0</button>
@@ -349,7 +366,7 @@ return(
                         setCurrentStep(0)
                         setCollected(new Array(map.length).fill(false))
                         setPause(false)
-                    
+                        setGameOver("")
                        
                         
  }}   >Map 1</button>
@@ -361,24 +378,28 @@ setStepsTaken([])
 setCurrentStep(0) 
 setCollected(new Array(map.length).fill(false))
 setPause(false)
+setGameOver("")
 }  }   >Aki</button>
 <button  onClick={()=>{setAgent("Jocke") 
 setStepsTaken([])
 setCurrentStep(0)
 setCollected(new Array(map.length).fill(false))
 setPause(false)
+setGameOver("")
 }}   >Jocke</button>
 <button  onClick={()=>{setAgent("Micko") 
 setStepsTaken([])
 setCurrentStep(0) 
 setCollected(new Array(map.length).fill(false))
 setPause(false)
+setGameOver("")
  }}   >Micko</button>
 <button  onClick={()=>{setAgent("Uki")
 setStepsTaken([])
 setCurrentStep(0)
 setCollected(new Array(map.length).fill(false))
 setPause(false)
+setGameOver("")
 
 }}   >Uki</button>
 </div>
@@ -388,21 +409,21 @@ setPause(false)
 <div id="game" > 
 
 <div id="main"  > 
-
-{<h1 style={{textAlign:'center'}}>{currrentStep}</h1>  }
-{mode ==='step' && <h1 style={{textAlign:'center'}}>Step</h1>  }
+{mode ==='step' && <h2 style={{textAlign:'center',color:'whitesmoke'}}>Step {currrentStep}/{map.length}</h2>  }
 
 {map.map(([x,y],id)=> <Coin key={id} number={id} x={x} y={y} collected={collected}  />   )}
 <Agent  name={agent} x={agentPosition.x}  y={agentPosition.y }   />
-{ pause==false && currentStepRef.current>0 && currentStepRef.current<path.length-1 && mode=="auto" ?<h1  style={{color:'red'}}>Paused</h1>:<h1></h1>}
+{ pause==false && currentStepRef.current>0 && currentStepRef.current<path.length-1 && mode=="auto" && gameOver.length==0 ?<h1  style={{textAlign:'center',color:'red'}}>Paused</h1>:<h1></h1>}
+<h1 style={{color:'red'}}  >{gameOver}</h1>
 </div>
 
 <div id="score">
-<h3>-------Steps-------</h3>
+<h4>======Steps======</h4>
   <div style={{ height:'60%'}}   >
 
-{stepsTaken.map(({id,from,to,price})=><h3 key={id}>{id} | {from} - {to} :{price} </h3>)}
+{stepsTaken.map(({id,from,to,price})=><h4   key={id}> {id+1}&nbsp;|&nbsp;{from} - {to} :<span style={{color:'whitesmoke'}}>{price}</span> </h4>)}
 </div>
+<p>===============</p>
 <p style={{display:'flex', justifyContent:'center',alignItems:'center'}}  >Total Price: {stepsTaken.reduce((sum, { price }) => sum + price, 0)}</p>
 </div>
 </div>
