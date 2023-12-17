@@ -71,10 +71,12 @@ if(error)
    <p>{data.message}</p>*/
   return (
     <>
-  
-<button  onClick={()=>{setGames(0)}}>Pytnik</button>
+  <div>
+  <button  onClick={()=>{setGames(0)}}>Pytnik</button>
 <button  onClick={()=>{setGames(1)}}>Mills</button>
 
+
+  </div>
 
 
 
