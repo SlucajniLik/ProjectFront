@@ -168,14 +168,14 @@ setCollected((prevCollected) => {
     currentStepRef.current = currrentStep;
 
 
-    if(currentStepRef.current==path.length-1)
+    if(currentStepRef.current==path.length-1 && mode=="auto")
     {
       setTimeout(() => {
         setGameOver("Game over")
       }, 1000);
     }
 
-  }, [currrentStep,collected]);
+  }, [currrentStep,collected,gameOver,pause]);
 
   var tmIdArr=[]
   const arr = useRef(tmIdArr);
@@ -314,6 +314,7 @@ setPause(!pause)
       if(mode=='auto')
       {
         setPause(false)
+        setGameOver("")
         for(let i=0;i<arr.current.length;i++)
     {
       console.log("trenutni"+arr.current[i])
@@ -414,14 +415,14 @@ setGameOver("")
 {map.map(([x,y],id)=> <Coin key={id} number={id} x={x} y={y} collected={collected}  />   )}
 <Agent  name={agent} x={agentPosition.x}  y={agentPosition.y }   />
 { pause==false && currentStepRef.current>0 && currentStepRef.current<path.length-1 && mode=="auto" && gameOver.length==0 ?<h1  style={{textAlign:'center',color:'red'}}>Paused</h1>:<h1></h1>}
-<h1 style={{color:'red'}}  >{gameOver}</h1>
+{ mode=="auto"? <h1 style={{color:'red'}}  >{gameOver}</h1>:<h1></h1>}
 </div>
 
 <div id="score">
 <h4>======Steps======</h4>
   <div style={{ height:'60%'}}   >
 
-{stepsTaken.map(({id,from,to,price})=><h4   key={id}> {id+1}&nbsp;|&nbsp;{from} - {to} :<span style={{color:'whitesmoke'}}>{price}</span> </h4>)}
+{stepsTaken.map(({id,from,to,price})=><h4 style={{display:'flex', justifyContent:'space-evenly'}}  key={id}> <span>{id+1} <span>|</span></span><span>{from} - {to} :</span><span style={{color:'whitesmoke'}}>{price}</span> </h4>)}
 </div>
 <p>===============</p>
 <p style={{display:'flex', justifyContent:'center',alignItems:'center'}}  >Total Price: {stepsTaken.reduce((sum, { price }) => sum + price, 0)}</p>
