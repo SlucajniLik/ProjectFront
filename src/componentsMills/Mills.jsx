@@ -30,7 +30,7 @@ function Board({position,onClickCircle})
 
 }
 
-function Piece({square,index,color})
+function Piece({square,index,color,selectedPiece,onClickPiece})
 {
 
 let x=0
@@ -87,14 +87,8 @@ else if(index===7)
 }
 
 return (
-    <circle cx={x} cy={y} r={3} fill={color}   />
+    <circle cx={x} cy={y} r={3} fill={color}    stroke={selectedPiece==true?'green':'transparent'}   onClick={()=>onClickPiece(square,index,color)}      />
 )
-
-
-
-
-
-
 }
 
 
@@ -104,21 +98,62 @@ return (
 export default function Mills()
 {
 
-   const[pieces,setPices]=useState([
+    const[pieces,setPices]=useState([])
+  /* const[pieces,setPices]=useState([
     {square:0,index:0,color:'white'},
     {square:1,index:0,color:'black'},
-   ])
+   ])*/
    const[color,setColor]=useState('white') 
-
+   const[selectedPiece,setSelectedPiece]=useState(null)
+   const[player,setPlayer]=useState("white")
    function changeColor()
    {
     setColor(cl=>cl==='white'?'black':'white')
    }
 
+
+
+   
+
 function onClickCircle(square,index)
 {
+console.log("ss: "+JSON.stringify(selectedPiece))
+
+if(selectedPiece==null)
+{
     setPices(p=>[...p,{square,index,color}])
-    changeColor()
+}
+else{
+
+    //setPices(pieces.filter(p=>(p.square!=selectedPiece.square && p.index!=selectedPiece.index && p.color!=selectedPiece.color)))
+    setPices(pieces.filter(p=>(p!=selectedPiece)))
+    
+
+      setPices(p=>[...p,{square,index,color:selectedPiece.color}])
+
+    setSelectedPiece(null)
+  
+}
+
+changeColor()
+  
+}
+
+
+
+function onClickPiece(square,index,colorr)
+{
+
+if(color==colorr)
+{
+const findPiece=pieces.find(pi=>pi.square==square && pi.index==index && pi.color==colorr)
+   
+    setSelectedPiece(findPiece)
+    
+}
+   
+ console.log("sel : "+JSON.stringify(findPiece))
+   
 }
 
 
@@ -138,7 +173,7 @@ function onClickCircle(square,index)
 
 {/*pieces.map(({square,index,color})=>{ <Piece key={`${square}-${index}-${color}`} square={square}index={index} color={color} />   })*/}
    
-{pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square}index={index} color={color} />)}
+{pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index  && selectedPiece?.color==color?true:false}  onClickPiece={onClickPiece}     />)}
 
 </svg>
 
