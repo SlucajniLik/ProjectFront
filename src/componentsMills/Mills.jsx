@@ -155,7 +155,7 @@ else if(index===7)
 }
 
 return (
-    <circle cx={x} cy={y} r={3} fill={color}    stroke={selectedPiece==true?'green':'transparent'}   onClick={()=>onClickPiece(square,index,color)}      />
+    <circle cx={x} cy={y} r={3} fill={color}    stroke={selectedPiece==true?'red':'transparent'}   onClick={()=>onClickPiece(square,index,color)}      />
 )
 }
 
@@ -171,7 +171,7 @@ export default function Mills()
     {square:0,index:0,color:'white'},
     {square:1,index:0,color:'black'},
    ])*/
-
+   const[lines,setLines]=useState([])
    const[countWhite,setCountWhite]=useState(9)
    const[countBlack,setCountBlack]=useState(9)
 
@@ -195,6 +195,14 @@ const[selectedIndex,setSelectedIndex]=useState(0)
 
 function checkMills(square,index)
 {
+
+    var x1;
+    var y1;
+    var x2;
+    var y2;
+
+
+
   if(index %2 !==0 )
   {
 const previous=pieces.find(pi=>pi.square==square && pi.index==index-1)
@@ -203,6 +211,51 @@ const next=pieces.find(pi=>pi.square==square && pi.index==(index+1)%8)
  if(next!=null && previous!=null && previous.color!=color  && next.color!=color  )
  {
     console.log("Mills postojiiiiiiiiiiiii: moduo 2")
+
+    
+
+
+
+
+if(previous.index==0 && next.index==2)
+{
+
+     x1=previous.square*10+10
+     y1=previous.square*10+10
+     x2=100 - (next.square * 10 + 10)
+     y2=next.square*10+10
+
+}
+else if(previous.index==2 && next.index==4)
+{
+
+    x1=100 - (previous.square * 10 + 10)
+    y1=previous.square*10+10
+    x2=100 - (next.square * 10 + 10)
+    y2=100 - (next.square * 10 + 10);
+}
+else if(previous.index==4 && next.index==6)
+{
+
+    x1=100 - (previous.square * 10 + 10)
+    y1=100 - (previous.square * 10 + 10);
+    x2=next.square * 10 + 10;
+    y2=100 - (next.square * 10 + 10);
+}
+else if(previous.index==6 && next.index==0)
+{
+
+    x1=previous.square * 10 + 10;
+    y1=100 - (previous.square * 10 + 10);
+    x2=next.square * 10 + 10;
+    y2=next.square * 10 + 10;
+}
+setLines(p=>[...p,{x1,y1,x2,y2}])
+
+
+
+
+
 
     return true
  }
@@ -217,7 +270,7 @@ const next=pieces.find(pi=>pi.square==square && pi.index==(index+1)%8)
 
 
 let newLineMill=true
-
+var arr=[]
 for(let i = 0; i < 3; i++)
 {
 const piece=pieces.find(pi=>pi.square===i && pi.index===index)
@@ -227,11 +280,55 @@ if(piece==undefined || piece.color === color )
     newLineMill=false
     break;
 }
-
+if(i==0 || i==2)
+{
+    arr[i]=piece
+}
+console.log()
 }
 
 if(newLineMill)
 {
+    console.log(arr)
+        if(arr[0].index==1)
+        {
+         x1=50
+         y1=arr[0].square * 10 + 10;
+         x2=50
+         y2=arr[2].square * 10 + 10;
+        }
+        else if(arr[0].index==3)
+        {
+            x1=100 - (arr[0].square * 10 + 10)
+            y1=50
+            x2=100 - (arr[2].square * 10 + 10)
+            y2=50
+        }
+        else if(arr[0].index==5)
+        {
+            x1=50
+            y1=100 - (arr[0].square * 10 + 10);
+            x2=50
+            y2=100 - (arr[2].square * 10 + 10);
+        }
+        else if(arr[0].index==7)
+        {
+            x1=arr[0].square * 10 + 10;
+            y1=50
+            x2=arr[2].square * 10 + 10;
+            y2=50
+        }
+
+
+
+
+        setLines(p=>[...p,{x1,y1,x2,y2}])
+
+
+
+
+
+
     console.log("Mills postojiiiiiiiiiiiii: newLineMill")
 
 return true
@@ -256,6 +353,68 @@ if(previousPiece!=null && previousPreviousPiece!=null && previousPiece.color!=co
     {
        console.log("Mills postojiiiiiiiiiiiii: moduo !2 prev prev")
 
+       const currentPiece=pieces.find(pi=>pi.square==square && pi.index==index)
+
+
+       if(currentPiece.index==0 )
+       {
+       
+            x1=currentPiece.square*10+10
+            y1=currentPiece.square*10+10
+            //0
+            x2=previousPreviousPiece.square * 10 + 10;
+            y2=100 - (previousPreviousPiece.square * 10 + 10);
+       ///6
+       }
+       else if(currentPiece.index==2)
+       {
+       
+           x1=100 - (currentPiece.square * 10 + 10)
+           y1=currentPiece.square*10+10
+           //2
+           x2=previousPreviousPiece.square*10+10
+           y2=previousPreviousPiece.square*10+10
+           //0
+       }
+       else if(currentPiece.index==4)
+       {
+       
+           x1=100 - (currentPiece.square * 10 + 10)
+           y1=100 - (currentPiece.square * 10 + 10);
+           //4
+           x2=100 - (previousPreviousPiece.square * 10 + 10)
+           y2=previousPreviousPiece.square*10+10
+           //2
+       }
+       else if(currentPiece.index==6 )
+       {
+       
+           x1=currentPiece.square * 10 + 10;
+           y1=100 - (currentPiece.square * 10 + 10);
+           //6
+           x2=previousPreviousPiece.square * 10 + 10;
+           y2=previousPreviousPiece.square * 10 + 10;
+           //0
+       }
+       setLines(p=>[...p,{x1,y1,x2,y2}])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
        return true
     }
 
@@ -267,6 +426,65 @@ const nextNextPiece=pieces.find(pi=>pi.square==square && pi.index==nextNextIndex
 if(nextPiece!=null && nextNextPiece!=null && nextPiece.color!=color  && nextNextPiece.color!=color  )
     {
        console.log("Mills postojiiiiiiiiiiiii: moduo !2 next next")
+
+
+       const currentPiece=pieces.find(pi=>pi.square==square && pi.index==index)
+
+
+       if(currentPiece.index==0 )
+       {
+       
+            x1=currentPiece.square*10+10
+            y1=currentPiece.square*10+10
+            //0
+            x2=100 - (nextNextPiece.square * 10 + 10)
+            y2=nextNextPiece.square*10+10
+       ///2
+       }
+       else if(currentPiece.index==2)
+       {
+       
+           x1=100 - (currentPiece.square * 10 + 10)
+           y1=currentPiece.square*10+10
+           //2
+           x2=100 - (nextNextPiece.square * 10 + 10)
+           y2=100 - (nextNextPiece.square * 10 + 10);
+           //4
+       }
+       else if(currentPiece.index==4)
+       {
+       
+           x1=100 - (currentPiece.square * 10 + 10)
+           y1=100 - (currentPiece.square * 10 + 10);
+           x2=nextNextPiece.square * 10 + 10;
+           y2=100 - (nextNextPiece.square * 10 + 10);
+       }
+       else if(currentPiece.index==6 )
+       {
+       
+           x1=currentPiece.square * 10 + 10;
+           y1=100 - (currentPiece.square * 10 + 10);
+           x2=nextNextPiece.square * 10 + 10;
+           y2=nextNextPiece.square * 10 + 10;
+       }
+       setLines(p=>[...p,{x1,y1,x2,y2}])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
        return true
     }
@@ -340,6 +558,10 @@ if(selectedPiece==null)
 
 }
 else{
+
+
+//if(countWhite==0 && countBlack==0)
+//{
 if(areConnected(selectedPiece.square,selectedPiece.index,square,index))
 {
  //setPices(pieces.filter(p=>(p.square!=selectedPiece.square && p.index!=selectedPiece.index && p.color!=selectedPiece.color)))
@@ -350,6 +572,7 @@ if(areConnected(selectedPiece.square,selectedPiece.index,square,index))
 
 setSelectedPiece(null)
 changeColor()
+//}
 }
    
   
@@ -372,7 +595,7 @@ useEffect(() => {
         changeColor()
         //setClickedPiece(false)
     }
-    
+    console.log("AAAA "+lines)
 
     
 }, [pieces,clickedPiece])
@@ -400,6 +623,8 @@ setClickedPiece(true)
 else
 {
 
+   // if(countWhite==0 && countBlack==0)
+    //{
 
     if(color==colorr)
     {
@@ -412,7 +637,7 @@ else
        
      console.log("sel : "+JSON.stringify(findPiece))
 
-
+   // }
 
 }
 
@@ -441,7 +666,7 @@ else
 {/*pieces.map(({square,index,color})=>{ <Piece key={`${square}-${index}-${color}`} square={square}index={index} color={color} />   })*/}
    
 {pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index  && selectedPiece?.color==color?true:false}  onClickPiece={onClickPiece}     />)}
-
+ { lines.map(({x1,y1,x2,y2})=><line key={`crossed-${10}`} style={{ stroke: 'red', strokeWidth: 0.7}} x1={x1} y1={y1} x2={x2} y2={y2} />)      }  
 </svg>
 <div>
 <h3>Current player:{color}</h3>  
