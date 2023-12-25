@@ -184,7 +184,8 @@ export default function Mills()
 const[selectedSquare,setSelectedSquare]=useState(0)
 const[selectedIndex,setSelectedIndex]=useState(0)
 
-
+const[selectedClickedPiece,setSelectedClickedPiece]=useState(0)
+const[selectedPreviousIndex,setSelectedPrevoiusIndex]=useState(0)
 
 
    function changeColor()
@@ -201,22 +202,18 @@ function checkMills(square,index)
     var x2;
     var y2;
 
-
+console.log("Selected piesceeee: "+JSON.stringify(selectedClickedPiece))
 
   if(index %2 !==0 )
   {
 const previous=pieces.find(pi=>pi.square==square && pi.index==index-1)
 const next=pieces.find(pi=>pi.square==square && pi.index==(index+1)%8)
 
- if(next!=null && previous!=null && previous.color!=color  && next.color!=color  )
- {
-    console.log("Mills postojiiiiiiiiiiiii: moduo 2")
-
-    
 
 
 
-
+if(next!=null && previous!=null && previous.color!=color  && next.color!=color )
+{
 if(previous.index==0 && next.index==2)
 {
 
@@ -250,23 +247,82 @@ else if(previous.index==6 && next.index==0)
     x2=next.square * 10 + 10;
     y2=next.square * 10 + 10;
 }
+
+console.log("Mills postojiiiiiiiiiiiii: moduo 2")
+
+
 setLines(p=>[...p,{x1,y1,x2,y2}])
 
-
-
-
-
-
     return true
- }
+}
+else
+{
+     if(selectedClickedPiece!=null)
+     {
+    if((selectedClickedPiece.index-1)==0 && (selectedClickedPiece.index+1)==2)
+    {
+    
+         x1=(selectedClickedPiece.square)*10+10
+         y1=(selectedClickedPiece.square)*10+10
+         x2=100 - ((selectedClickedPiece.square) * 10 + 10)
+         y2=(selectedClickedPiece.square)*10+10
+         console.log("asasasas:   "+x2+" : "+JSON.stringify(selectedClickedPiece))
+    
+    }
+    else if((selectedClickedPiece.index-1)==2 && (selectedClickedPiece.index+1)==4)
+    {
+    
+        x1=100 - ((selectedClickedPiece.square) * 10 + 10)
+        y1=(selectedClickedPiece.square)*10+10
+        x2=100 - ((selectedClickedPiece.square) * 10 + 10)
+        y2=100 - ((selectedClickedPiece.square) * 10 + 10);
+    }
+    else if((selectedClickedPiece.index-1)==4 && (selectedClickedPiece.index+1)==6)
+    {
+    
+        x1=100 - ((selectedClickedPiece.square) * 10 + 10)
+        y1=100 - ((selectedClickedPiece.square) * 10 + 10);
+        x2=(selectedClickedPiece.square) * 10 + 10;
+        y2=100 - ((selectedClickedPiece.square) * 10 + 10);
+    }
+    else if((selectedClickedPiece.index)==6 && ((selectedClickedPiece.index+1)%8)==0)
+    {
+    
+        x1=(selectedClickedPiece.square) * 10 + 10;
+        y1=100 - ((selectedClickedPiece.square) * 10 + 10);
+        x2=(selectedClickedPiece.square) * 10 + 10;
+        y2=(selectedClickedPiece.square) * 10 + 10;
+    }
+    
+    console.log("Mills postojiiiiiiiiiiiii: moduo brisanje")
+    
+
+    const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
+    console.log("ssss :::: "+JSON.stringify(tr)+"  x "+JSON.stringify({x1,y1,x2,y2})+" :"+JSON.stringify(selectedClickedPiece))
+
+    if(tr)
+    {
+        console.log("linesss:   "+JSON.stringify(lines.filter(li=>li!=tr)) )
+        
+
+        setLines((liness)=>liness.filter(li=>li!=tr))
+        
+    }
+     }
+
+
+}
+
+
+
+
+ 
 
 
 
 
 
 
- const piece=pieces.find(pi=>pi.square===square && pi.index===index)
- console.log("Piecccrrr"+JSON.stringify(piece))
 
 
 let newLineMill=true
@@ -359,64 +415,66 @@ if(previousPiece!=null && previousPreviousPiece!=null && previousPiece.color!=co
        if(currentPiece.index==0 )
        {
        
-            x1=currentPiece.square*10+10
-            y1=currentPiece.square*10+10
+        x1=previousPreviousPiece.square * 10 + 10;
+        y1=100 - (previousPreviousPiece.square * 10 + 10);
+   ///6
+            x2=currentPiece.square*10+10
+            y2=currentPiece.square*10+10
             //0
-            x2=previousPreviousPiece.square * 10 + 10;
-            y2=100 - (previousPreviousPiece.square * 10 + 10);
-       ///6
+           
        }
        else if(currentPiece.index==2)
        {
        
-           x1=100 - (currentPiece.square * 10 + 10)
-           y1=currentPiece.square*10+10
+        x1=previousPreviousPiece.square*10+10
+        y1=previousPreviousPiece.square*10+10
+        //0
+
+           x2=100 - (currentPiece.square * 10 + 10)
+           y2=currentPiece.square*10+10
            //2
-           x2=previousPreviousPiece.square*10+10
-           y2=previousPreviousPiece.square*10+10
-           //0
+          
        }
        else if(currentPiece.index==4)
        {
-       
-           x1=100 - (currentPiece.square * 10 + 10)
-           y1=100 - (currentPiece.square * 10 + 10);
-           //4
-           x2=100 - (previousPreviousPiece.square * 10 + 10)
-           y2=previousPreviousPiece.square*10+10
+           x1=100 - (previousPreviousPiece.square * 10 + 10)
+           y1=previousPreviousPiece.square*10+10
            //2
+           x1=100 - (currentPiece.square * 10 + 10)
+           y2=100 - (currentPiece.square * 10 + 10);
+           //4
+          
        }
        else if(currentPiece.index==6 )
        {
-       
-           x1=currentPiece.square * 10 + 10;
-           y1=100 - (currentPiece.square * 10 + 10);
-           //6
-           x2=previousPreviousPiece.square * 10 + 10;
-           y2=previousPreviousPiece.square * 10 + 10;
+           x1=previousPreviousPiece.square * 10 + 10;
+           y1=previousPreviousPiece.square * 10 + 10;
            //0
+           x2=currentPiece.square * 10 + 10;
+           y2=100 - (currentPiece.square * 10 + 10);
+           //6
+          
        }
        setLines(p=>[...p,{x1,y1,x2,y2}])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
        return true
     }
+    else
+    {
+
+
+
+
+
+
+       /*  const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
+    console.log("ssss :::: "+tr+"  x "+JSON.stringify({x1,y1,x2,y2})+" :"+JSON.stringify(selectedClickedPiece))
+    if(tr)
+    {
+        setLines((liness)=>liness.filter(li=>li!=tr))
+    }*/
+
+    }
+
 
 
 const nextPiece=pieces.find(pi=>pi.square==square && pi.index==nexIndex)
@@ -424,7 +482,9 @@ const nextNextPiece=pieces.find(pi=>pi.square==square && pi.index==nextNextIndex
 
 
 if(nextPiece!=null && nextNextPiece!=null && nextPiece.color!=color  && nextNextPiece.color!=color  )
-    {
+    
+
+{
        console.log("Mills postojiiiiiiiiiiiii: moduo !2 next next")
 
 
@@ -517,9 +577,19 @@ return false
 function onClickCircle(square,index)
 {
 
-   if(removedPiece)
+   if(removedPiece && clickedPiece==false )
    {
+
+
+    console.log("asasdfdfffffffffff")
     return true
+   }
+   else if(removedPiece && clickedPiece==true)
+   {
+    //changeColor()
+    setRemovedPiece(false)
+    setClickedPiece(false)
+
    }
 
 
@@ -592,22 +662,22 @@ useEffect(() => {
     {
         setRemovedPiece(true)
 
-        changeColor()
+        //changeColor()
         //setClickedPiece(false)
     }
     console.log("AAAA "+lines)
 
     
-}, [pieces,clickedPiece])
+}, [pieces,selectedPiece,selectedClickedPiece])
 
 
 function onClickPiece(square,index,colorr)
 {
 
-if(removedPiece)
+if(removedPiece && clickedPiece==false)
 {
-
-if(color== colorr)
+console.log("asdasdasdsadsa")
+if(color!= colorr)
 {return;}
 
 
@@ -631,11 +701,12 @@ else
     const findPiece=pieces.find(pi=>pi.square==square && pi.index==index && pi.color==colorr)
        
         setSelectedPiece(findPiece)
-        setClickedPiece(true)
+        setSelectedClickedPiece(findPiece)
+        
         
     }
        
-     console.log("sel : "+JSON.stringify(findPiece))
+   
 
    // }
 
@@ -646,6 +717,8 @@ else
 
    
 }
+
+
 
 
 
@@ -664,9 +737,9 @@ else
 
 
 {/*pieces.map(({square,index,color})=>{ <Piece key={`${square}-${index}-${color}`} square={square}index={index} color={color} />   })*/}
-   
+{ lines.map(({x1,y1,x2,y2})=><line key={x1+"-"+y1+"-"+x2+"-"+y2} style={{ stroke: 'red', strokeWidth: 0.5}} x1={x1} y1={y1} x2={x2} y2={y2} />)      }  
 {pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index  && selectedPiece?.color==color?true:false}  onClickPiece={onClickPiece}     />)}
- { lines.map(({x1,y1,x2,y2})=><line key={`crossed-${10}`} style={{ stroke: 'red', strokeWidth: 0.7}} x1={x1} y1={y1} x2={x2} y2={y2} />)      }  
+ 
 </svg>
 <div>
 <h3>Current player:{color}</h3>  
