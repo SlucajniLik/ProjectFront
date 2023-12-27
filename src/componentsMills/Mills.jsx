@@ -172,15 +172,16 @@ export default function Mills()
     {square:1,index:0,color:'black'},
    ])*/
    const[lines,setLines]=useState([])
-   const[countWhite,setCountWhite]=useState(9)
-   const[countBlack,setCountBlack]=useState(9)
+   const[countWhite,setCountWhite]=useState(4)
+   const[countBlack,setCountBlack]=useState(4)
 
    const[color,setColor]=useState('white') 
    const[selectedPiece,setSelectedPiece]=useState(null)
    const[player,setPlayer]=useState("white")
    const[removedPiece,setRemovedPiece]=useState(false)
    const[clickedPiece,setClickedPiece]=useState(false)
-
+   const [gameOver,setgameOver]=useState(false)
+   const [winner,setWinner]=useState("")
 const[selectedSquare,setSelectedSquare]=useState(0)
 const[selectedIndex,setSelectedIndex]=useState(0)
 
@@ -214,6 +215,7 @@ const next=pieces.find(pi=>pi.square==square && pi.index==(index+1)%8)
 
 if(next!=null && previous!=null && previous.color!=color  && next.color!=color )
 {
+    console.log("bojeeeee  prev :"+previous.color+" boje color :"+color)
 if(previous.index==0 && next.index==2)
 {
 
@@ -255,75 +257,6 @@ setLines(p=>[...p,{x1,y1,x2,y2}])
 
     return true
 }
-else
-{
-     if(selectedClickedPiece!=null)
-     {
-    if((selectedClickedPiece.index-1)==0 && (selectedClickedPiece.index+1)==2)
-    {
-    
-         x1=(selectedClickedPiece.square)*10+10
-         y1=(selectedClickedPiece.square)*10+10
-         x2=100 - ((selectedClickedPiece.square) * 10 + 10)
-         y2=(selectedClickedPiece.square)*10+10
-         console.log("asasasas:   "+x2+" : "+JSON.stringify(selectedClickedPiece))
-    
-    }
-    else if((selectedClickedPiece.index-1)==2 && (selectedClickedPiece.index+1)==4)
-    {
-    
-        x1=100 - ((selectedClickedPiece.square) * 10 + 10)
-        y1=(selectedClickedPiece.square)*10+10
-        x2=100 - ((selectedClickedPiece.square) * 10 + 10)
-        y2=100 - ((selectedClickedPiece.square) * 10 + 10);
-    }
-    else if((selectedClickedPiece.index-1)==4 && (selectedClickedPiece.index+1)==6)
-    {
-    
-        x1=100 - ((selectedClickedPiece.square) * 10 + 10)
-        y1=100 - ((selectedClickedPiece.square) * 10 + 10);
-        x2=(selectedClickedPiece.square) * 10 + 10;
-        y2=100 - ((selectedClickedPiece.square) * 10 + 10);
-    }
-    else if((selectedClickedPiece.index)==6 && ((selectedClickedPiece.index+1)%8)==0)
-    {
-    
-        x1=(selectedClickedPiece.square) * 10 + 10;
-        y1=100 - ((selectedClickedPiece.square) * 10 + 10);
-        x2=(selectedClickedPiece.square) * 10 + 10;
-        y2=(selectedClickedPiece.square) * 10 + 10;
-    }
-    
-    console.log("Mills postojiiiiiiiiiiiii: moduo brisanje")
-    
-
-    const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
-    console.log("ssss :::: "+JSON.stringify(tr)+"  x "+JSON.stringify({x1,y1,x2,y2})+" :"+JSON.stringify(selectedClickedPiece))
-
-    if(tr)
-    {
-        console.log("linesss:   "+JSON.stringify(lines.filter(li=>li!=tr)) )
-        
-
-        setLines((liness)=>liness.filter(li=>li!=tr))
-        
-    }
-     }
-
-
-}
-
-
-
-
- 
-
-
-
-
-
-
-
 
 let newLineMill=true
 var arr=[]
@@ -440,16 +373,16 @@ if(previousPiece!=null && previousPreviousPiece!=null && previousPiece.color!=co
            x1=100 - (previousPreviousPiece.square * 10 + 10)
            y1=previousPreviousPiece.square*10+10
            //2
-           x1=100 - (currentPiece.square * 10 + 10)
+           x2=100 - (currentPiece.square * 10 + 10)
            y2=100 - (currentPiece.square * 10 + 10);
            //4
           
        }
        else if(currentPiece.index==6 )
        {
-           x1=previousPreviousPiece.square * 10 + 10;
-           y1=previousPreviousPiece.square * 10 + 10;
-           //0
+           x1=100 - (currentPiece.square * 10 + 10)
+           y1=100 - (currentPiece.square * 10 + 10);
+           //4
            x2=currentPiece.square * 10 + 10;
            y2=100 - (currentPiece.square * 10 + 10);
            //6
@@ -528,54 +461,310 @@ if(nextPiece!=null && nextNextPiece!=null && nextPiece.color!=color  && nextNext
            y2=nextNextPiece.square * 10 + 10;
        }
        setLines(p=>[...p,{x1,y1,x2,y2}])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
        return true
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }
-
-
-
-
-
-
 
 return false
 }
+
+
+function removeMills()
+{
+
+    var x1;
+    var y1;
+    var x2;
+    var y2;
+
+    if(selectedClickedPiece.index %2 !==0 )
+    {
+  const previous=pieces.find(pi=>pi.square==selectedClickedPiece.square && pi.index==selectedClickedPiece.index-1)
+  const next=pieces.find(pi=>pi.square==selectedClickedPiece.square && pi.index==(selectedClickedPiece.index+1)%8)
+  
+  
+  
+  
+  if(next!=null && previous!=null && previous.color!=color  && next.color!=color )
+  {
+      
+  if(previous.index==0 && next.index==2)
+  {
+  
+       x1=previous.square*10+10
+       y1=previous.square*10+10
+       x2=100 - (next.square * 10 + 10)
+       y2=next.square*10+10
+  
+  }
+  else if(previous.index==2 && next.index==4)
+  {
+  
+      x1=100 - (previous.square * 10 + 10)
+      y1=previous.square*10+10
+      x2=100 - (next.square * 10 + 10)
+      y2=100 - (next.square * 10 + 10);
+  }
+  else if(previous.index==4 && next.index==6)
+  {
+  
+      x1=100 - (previous.square * 10 + 10)
+      y1=100 - (previous.square * 10 + 10);
+      x2=next.square * 10 + 10;
+      y2=100 - (next.square * 10 + 10);
+  }
+  else if(previous.index==6 && next.index==0)
+  {
+  
+      x1=previous.square * 10 + 10;
+      y1=100 - (previous.square * 10 + 10);
+      x2=next.square * 10 + 10;
+      y2=next.square * 10 + 10;
+  }
+  
+  const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
+  
+
+  if(tr)
+  {
+
+      
+
+      setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2))
+      
+  }
+          return true
+  
+      
+  }
+  
+  let newLineMill=true
+  var arr=[]
+  for(let i = 0; i < 3; i++)
+  {
+  const piece=pieces.find(pi=>pi.square===i && pi.index===selectedClickedPiece.index)
+  console.log("Pieccc"+JSON.stringify(piece)+"COLOR "+color)
+  if(piece==undefined  )
+  {
+      newLineMill=false
+     break
+  }
+  
+  console.log()
+  }
+
+ 
+  if(newLineMill==false && selectedClickedPiece.color !== color )
+  {
+
+    arr[0]={index:selectedClickedPiece.index,square:0}
+    arr[2]={index:selectedClickedPiece.index,square:2}
+      console.log(arr)
+          if(arr[0].index==1)
+          {
+           x1=50
+           y1=arr[0].square * 10 + 10;
+           x2=50
+           y2=arr[2].square * 10 + 10;
+          }
+          else if(arr[0].index==3)
+          {
+              x1=100 - (arr[0].square * 10 + 10)
+              y1=50
+              x2=100 - (arr[2].square * 10 + 10)
+              y2=50
+          }
+          else if(arr[0].index==5)
+          {
+              x1=50
+              y1=100 - (arr[0].square * 10 + 10);
+              x2=50
+              y2=100 - (arr[2].square * 10 + 10);
+          }
+          else if(arr[0].index==7)
+          {
+              x1=arr[0].square * 10 + 10;
+              y1=50
+              x2=arr[2].square * 10 + 10;
+              y2=50
+          }
+  
+  
+          console.log("Mills postojiiiiiiiiiiiii: newLineMill")
+  
+          const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
+  
+
+          if(tr)
+          {
+        
+              
+       
+              setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2))
+              
+          }
+                  return true
+  
+  
+  
+  }
+    }
+ else
+ {
+    const previousPiece=pieces.find(pi=>pi.square==selectedClickedPiece.square && pi.index==selectedClickedPiece.index-1)
+    const previousPreviousPiece=pieces.find(pi=>pi.square==selectedClickedPiece.square && pi.index==selectedClickedPiece.index-2)
+    
+    
+    if(previousPiece!=null && previousPreviousPiece!=null && previousPiece.color!=color  && previousPreviousPiece.color!=color  )
+        {
+           console.log("Mills postojiiiiiiiiiiiii: moduo !2 prev prev")
+    
+           const currentPiece=selectedClickedPiece
+    
+    
+           if(currentPiece.index==0 )
+           {
+           
+            x1=previousPreviousPiece.square * 10 + 10;
+            y1=100 - (previousPreviousPiece.square * 10 + 10);
+       ///6
+                x2=currentPiece.square*10+10
+                y2=currentPiece.square*10+10
+                //0
+               
+           }
+           else if(currentPiece.index==2)
+           {
+           
+            x1=previousPreviousPiece.square*10+10
+            y1=previousPreviousPiece.square*10+10
+            //0
+    
+               x2=100 - (currentPiece.square * 10 + 10)
+               y2=currentPiece.square*10+10
+               //2
+              
+           }
+           else if(currentPiece.index==4)
+           {
+               x1=100 - (previousPreviousPiece.square * 10 + 10)
+               y1=previousPreviousPiece.square*10+10
+               //2
+               x2=100 - (currentPiece.square * 10 + 10)
+               y2=100 - (currentPiece.square * 10 + 10);
+               //4
+              
+           }
+           else if(currentPiece.index==6 )
+           {
+               x1=100 - (currentPiece.square * 10 + 10)
+               y1=100 - (currentPiece.square * 10 + 10);
+               //4
+               x2=currentPiece.square * 10 + 10;
+               y2=100 - (currentPiece.square * 10 + 10);
+               //6
+              
+           }
+         
+   const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
+  
+
+   if(tr)
+   {
+ 
+       
+
+       setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2))
+       
+   }
+           return true
+        }
+
+    const nextPiece=pieces.find(pi=>pi.square==selectedClickedPiece.square && pi.index==selectedClickedPiece.index+1)
+    const nextNextPiece=pieces.find(pi=>pi.square==selectedClickedPiece.square && pi.index==selectedClickedPiece.index+2)
+    
+    
+    if(nextPiece!=null && nextNextPiece!=null && nextPiece.color!=color  && nextNextPiece.color!=color  )
+        
+    
+    {
+           console.log("Mills postojiiiiiiiiiiiii: moduo !2 next next")
+    
+    
+           const currentPiece=selectedClickedPiece
+    
+    
+           if(currentPiece.index==0 )
+           {
+           
+                x1=currentPiece.square*10+10
+                y1=currentPiece.square*10+10
+                //0
+                x2=100 - (nextNextPiece.square * 10 + 10)
+                y2=nextNextPiece.square*10+10
+           ///2
+           }
+           else if(currentPiece.index==2)
+           {
+           
+               x1=100 - (currentPiece.square * 10 + 10)
+               y1=currentPiece.square*10+10
+               //2
+               x2=100 - (nextNextPiece.square * 10 + 10)
+               y2=100 - (nextNextPiece.square * 10 + 10);
+               //4
+           }
+           else if(currentPiece.index==4)
+           {
+           
+               x1=100 - (currentPiece.square * 10 + 10)
+               y1=100 - (currentPiece.square * 10 + 10);
+               x2=nextNextPiece.square * 10 + 10;
+               y2=100 - (nextNextPiece.square * 10 + 10);
+           }
+           else if(currentPiece.index==6 )
+           {
+           
+               x1=currentPiece.square * 10 + 10;
+               y1=100 - (currentPiece.square * 10 + 10);
+               x2=nextNextPiece.square * 10 + 10;
+               y2=nextNextPiece.square * 10 + 10;
+           }
+           console.log("Mills postojiiiiiiiiiiiii: moduo brisanje")
+   
+
+   const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
+  
+   if(tr)
+   {
+    
+       setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2))
+       
+   }
+           return true
+        }
+ }  
+    
+
+    
+
+}
+
+
+
+
+
    
 
 function onClickCircle(square,index)
 {
+
+
+    if(gameOver==true)
+{
+    return;
+}
+
 
    if(removedPiece && clickedPiece==false )
    {
@@ -603,11 +792,11 @@ setSelectedIndex(index)
 
 
 
-if(selectedPiece==null)
+if(selectedPiece==null && (countWhite>0 || countBlack>0))
 {
     
 
-
+    console.log("ss:sdsdsdsds "+JSON.stringify(selectedPiece))
        
    if(color=="white" && countWhite>0)
    {
@@ -630,9 +819,36 @@ if(selectedPiece==null)
 else{
 
 
-//if(countWhite==0 && countBlack==0)
-//{
-if(areConnected(selectedPiece.square,selectedPiece.index,square,index))
+if(countWhite==0 && countBlack==0)
+{
+    const whiteRemain = pieces.filter(s => s.color === 'white').length
+    const blackRemain = pieces.filter(s => s.color === 'black').length  
+
+if(whiteRemain==3 && selectedPiece.color=="white")
+{
+    setPices(pieces.filter(p=>(p!=selectedPiece)))
+    
+
+    setPices(p=>[...p,{square,index,color:selectedPiece.color}])
+   
+   setSelectedPiece(null)
+   changeColor()
+
+}
+else if(blackRemain==3 && selectedPiece.color=="black")
+{
+
+    console.log("dsdsdsds blackkkkk")
+    setPices(pieces.filter(p=>(p!=selectedPiece)))
+    
+
+    setPices(p=>[...p,{square,index,color:selectedPiece.color}])
+   
+   setSelectedPiece(null)
+   changeColor()
+}
+
+else if(areConnected(selectedPiece.square,selectedPiece.index,square,index))
 {
  //setPices(pieces.filter(p=>(p.square!=selectedPiece.square && p.index!=selectedPiece.index && p.color!=selectedPiece.color)))
  setPices(pieces.filter(p=>(p!=selectedPiece)))
@@ -642,8 +858,9 @@ if(areConnected(selectedPiece.square,selectedPiece.index,square,index))
 
 setSelectedPiece(null)
 changeColor()
-//}
 }
+}
+
    
   
 }
@@ -658,6 +875,8 @@ changeColor()
 
 useEffect(() => {
 
+    
+
     if(checkMills(selectedSquare,selectedIndex))
     {
         setRemovedPiece(true)
@@ -665,20 +884,55 @@ useEffect(() => {
         //changeColor()
         //setClickedPiece(false)
     }
+    else
+    {
+        removeMills()
+        console.log("REMOVE LINES"+JSON.stringify(lines))
+    }
+    
     console.log("AAAA "+lines)
 
+
+    const whiteRemain = pieces.filter(s => s.color === 'white').length
+    const blackRemain = pieces.filter(s => s.color === 'black').length  
+    if(countBlack==0 && countBlack==0 && whiteRemain==2)
+    {
+
+      console.log("Crni je pobedio")
+      setWinner("Black")
+       setgameOver(true)
+
+    }
+    else if(countBlack==0 && countBlack==0 && blackRemain==2)
+    {
+        setWinner("White")
+        setgameOver(true)
+        console.log("Beli je pobedio")
+    }
+
+
     
-}, [pieces,selectedPiece,selectedClickedPiece])
+}, [pieces,selectedPiece,selectedClickedPiece,color])
 
 
 function onClickPiece(square,index,colorr)
 {
+
+if(gameOver==true)
+{
+    return;
+}
+
+
 
 if(removedPiece && clickedPiece==false)
 {
 console.log("asdasdasdsadsa")
 if(color!= colorr)
 {return;}
+
+
+
 
 
 setPices(pieces.filter(pi=>pi.square!==square || pi.index !== index))
@@ -695,8 +949,8 @@ else
 
    // if(countWhite==0 && countBlack==0)
     //{
-
-    if(color==colorr)
+console.log("asasasdddddddddddddddddddg"+colorr+"sad"+color)
+    if(color==colorr && countWhite==0 && countBlack==0)
     {
     const findPiece=pieces.find(pi=>pi.square==square && pi.index==index && pi.color==colorr)
        
@@ -738,10 +992,11 @@ else
 
 {/*pieces.map(({square,index,color})=>{ <Piece key={`${square}-${index}-${color}`} square={square}index={index} color={color} />   })*/}
 { lines.map(({x1,y1,x2,y2})=><line key={x1+"-"+y1+"-"+x2+"-"+y2} style={{ stroke: 'red', strokeWidth: 0.5}} x1={x1} y1={y1} x2={x2} y2={y2} />)      }  
-{pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index  && selectedPiece?.color==color?true:false}  onClickPiece={onClickPiece}     />)}
+{pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index  && selectedPiece?.color==color && countWhite==0 && countBlack==0 ?true:false}  onClickPiece={onClickPiece}     />)}
  
 </svg>
 <div>
+<h3>Winner:{winner}</h3>
 <h3>Current player:{color}</h3>  
 <h3>White remaining:{countWhite}</h3>
 <h3>Black remaining:{countBlack}</h3>
