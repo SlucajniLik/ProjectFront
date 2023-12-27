@@ -253,7 +253,7 @@ else if(previous.index==6 && next.index==0)
 console.log("Mills postojiiiiiiiiiiiii: moduo 2")
 
 
-setLines(p=>[...p,{x1,y1,x2,y2}])
+setLines(p=>[...p,{x1,y1,x2,y2,color:previous.color}])
 
     return true
 }
@@ -311,7 +311,7 @@ if(newLineMill)
 
 
 
-        setLines(p=>[...p,{x1,y1,x2,y2}])
+        setLines(p=>[...p,{x1,y1,x2,y2,color:arr[0].color}])
 
 
 
@@ -388,7 +388,7 @@ if(previousPiece!=null && previousPreviousPiece!=null && previousPiece.color!=co
            //6
           
        }
-       setLines(p=>[...p,{x1,y1,x2,y2}])
+       setLines(p=>[...p,{x1,y1,x2,y2,color:currentPiece.color}])
        return true
     }
     else
@@ -460,7 +460,7 @@ if(nextPiece!=null && nextNextPiece!=null && nextPiece.color!=color  && nextNext
            x2=nextNextPiece.square * 10 + 10;
            y2=nextNextPiece.square * 10 + 10;
        }
-       setLines(p=>[...p,{x1,y1,x2,y2}])
+       setLines(p=>[...p,{x1,y1,x2,y2,color:currentPiece.color}])
        return true
     }
   }
@@ -522,7 +522,7 @@ function removeMills()
       y2=next.square * 10 + 10;
   }
   
-  const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
+  const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  && li.color==previous.color )
   
 
   if(tr)
@@ -530,7 +530,7 @@ function removeMills()
 
       
 
-      setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2))
+      setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2 || li.color!=previous.color))
       
   }
           return true
@@ -592,7 +592,7 @@ function removeMills()
   
           console.log("Mills postojiiiiiiiiiiiii: newLineMill")
   
-          const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
+          const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && arr[0].color  )
   
 
           if(tr)
@@ -600,7 +600,7 @@ function removeMills()
         
               
        
-              setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2))
+              setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2 || li.color!=arr[0].color))
               
           }
                   return true
@@ -666,7 +666,7 @@ function removeMills()
               
            }
          
-   const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
+   const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && li.color!=currentPiece.color )
   
 
    if(tr)
@@ -674,7 +674,7 @@ function removeMills()
  
        
 
-       setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2))
+       setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2 || li.color!=currentPiece.color))
        
    }
            return true
@@ -733,12 +733,12 @@ function removeMills()
            console.log("Mills postojiiiiiiiiiiiii: moduo brisanje")
    
 
-   const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2  )
+   const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && li.color==currentPiece.color )
   
    if(tr)
    {
     
-       setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2))
+       setLines(lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2 || li.color!=currentPiece.color))
        
    }
            return true
@@ -991,7 +991,7 @@ console.log("asasasdddddddddddddddddddg"+colorr+"sad"+color)
 
 
 {/*pieces.map(({square,index,color})=>{ <Piece key={`${square}-${index}-${color}`} square={square}index={index} color={color} />   })*/}
-{ lines.map(({x1,y1,x2,y2})=><line key={x1+"-"+y1+"-"+x2+"-"+y2} style={{ stroke: 'red', strokeWidth: 0.5}} x1={x1} y1={y1} x2={x2} y2={y2} />)      }  
+{ lines.map(({x1,y1,x2,y2,color})=><line key={x1+"-"+y1+"-"+x2+"-"+y2} style={{ stroke:color=='white'?'black':'white', strokeWidth: 0.5}} x1={x1} y1={y1} x2={x2} y2={y2} />)      }  
 {pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index  && selectedPiece?.color==color && countWhite==0 && countBlack==0 ?true:false}  onClickPiece={onClickPiece}     />)}
  
 </svg>
