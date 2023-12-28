@@ -210,7 +210,7 @@ function onClickCircle(square,index)
 
         if(areConnected(selectedPiece.square,selectedPiece.index,square,index))
         {
-        if(addRemoveLine(selectedPiece.square,selectedPiece.index,selectedPiece.color,3)==true && addRemoveLine(square,index,color,3)==true )
+       /* if(addRemoveLine(selectedPiece.square,selectedPiece.index,selectedPiece.color,3)==true && addRemoveLine(square,index,color,3)==true )
            {
           addRemoveLine(selectedPiece.square,selectedPiece.index,selectedPiece.color,2)
           addRemoveLine(square,index,color,1)
@@ -226,10 +226,11 @@ function onClickCircle(square,index)
 
            if(addRemoveLine(selectedPiece.square,selectedPiece.index,selectedPiece.color,3)==false && addRemoveLine(square,index,color,3)==true )
            {
-            addRemoveLine(selectedPiece.square,selectedPiece.index,selectedPiece.color,2)
+            
           addRemoveLine(square,index,color,1)
-           }
+           }*/
 
+           addRemoveLine(selectedPiece.square,selectedPiece.index,selectedPiece.color,2)
 
           
           
