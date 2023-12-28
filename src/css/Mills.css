@@ -19,6 +19,6 @@ stroke-width: 0.3;
 .boardCircle:hover {
 
 
-    stroke:green;
+    stroke:black;
     cursor: pointer;
 }
