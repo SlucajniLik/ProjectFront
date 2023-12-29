@@ -1,68 +1,5 @@
 import  {useEffect, useState} from 'react'
 import '../css/Mills.css'
-
-/*const connections = {
-    '0-0': ['0-1', '0-7'],
-    '0-1': ['0-0', '0-2', '1-1'],
-    '0-2': ['0-1', '0-3'],
-    '0-3': ['0-2', '0-4', '1-3'],
-    '0-4': ['0-3', '0-5'],
-    '0-5': ['0-4', '0-6', '1-5'],
-    '0-6': ['0-5', '0-7'],
-    '0-7': ['0-6', '0-0', '1-7'],
-
-    '1-0': ['1-1', '1-7'],
-    '1-1': ['1-2', '1-0', '0-1', '2-1'],
-    '1-2': ['1-3', '1-1'],
-    '1-3': ['1-4', '1-2', '0-3', '2-3'],
-    '1-4': ['1-5', '1-3'],
-    '1-5': ['1-6', '1-4', '0-5', '2-5'],
-    '1-6': ['1-7', '1-5'],
-    '1-7': ['1-0', '1-6', '0-7', '2-7'],
-
-    '2-0': ['2-1', '2-7'],
-    '2-1': ['2-2', '2-0', '1-1'],
-    '2-2': ['2-3', '2-1'],
-    '2-3': ['2-4', '2-2', '1-3'],
-    '2-4': ['2-5', '2-3'],
-    '2-5': ['2-6', '2-4', '1-5'],
-    '2-6': ['2-7', '2-5'],
-    '2-7': ['2-0', '2-6', '1-7'],
-}*/
-/*const mills=[[0,'00','01','02']
-             [0,'02','03','04']
-             [0,'04','05','06'] 
-             [0,'06','07','00']
-             [0,'10','11','12']
-             [0,'10','11','12']
-             [0,'10','11','12'] 
-             [0,'10','11','12']
-             [0,'20','21','22']
-             [0,'22','23','24']
-             [0,'24','25','26'] 
-             [0,'26','27','20']
-             [0,'21','11','01']
-             [0,'23','13','02']
-             [0,'25','15','05']
-             [0,'27','17','07'] 
-             [0,'10','11','12']
-
-
-
-
-
-                                ]*/
-
-
-
-
-/*function areConnected(square1, index1, square2, index2) {
-    const key1 = `${square1}-${index1}`;
-    const key2 = `${square2}-${index2}`;
-
-    return connections[key1]?.includes(key2);
-}
-*/
 function Board({position,onClickCircle})
 {
    const start=position
@@ -90,7 +27,7 @@ function Board({position,onClickCircle})
 
 }
 
-function Piece({square,index,color,selectedPiece,onClickPiece})
+function Piece({square,index,color,colorStroke,selectedPiece,onClickPiece})
 {
 
 let x=0
@@ -147,7 +84,7 @@ else if(index===7)
 }
 
 return (
-    <circle cx={x} cy={y} r={3} fill={color}  stroke={selectedPiece?'red':'transparent'}   onClick={()=>onClickPiece(square,index,color)}   />
+    <circle cx={x} cy={y} r={3} fill={color}  stroke={selectedPiece?colorStroke:'transparent'}   onClick={()=>onClickPiece(square,index,color)}   />
 )
 }
 
@@ -178,6 +115,7 @@ export default function Mills()
    const [square,setSquare]=useState(null)
    const [index,setIndex]=useState(null)
    const [color2,setColor2]=useState(null)
+   const[validPieceColor,setValidPieceColor]=useState('transparent')
    function changeColor()
    {
     setColor(cl=>cl==='white'?'black':'white')
@@ -186,10 +124,118 @@ export default function Mills()
 
 
 
+function isValidPiece(square1, index1)
+{
+  if(index1%2==0)
+    {
+ 
+ 
+     let prev=index1==0?7:index1-1;
+     let next=index1+1;
+ 
+    const prevPiece=pieces.find(pi=>pi.square==square1 && pi.index==prev)
+    const nextPiece=pieces.find(pi=>pi.square==square1 && pi.index==next)
+
+console.log(index1,square1,JSON.stringify(prevPiece),JSON.stringify(nextPiece))
+
+
+
+ 
+     if(prevPiece!=null && nextPiece!=null)
+     {
+         return false
+     }
+     else
+     {
+      return true
+     }
+
+ 
+    }
+    else
+    {
+ 
+      if(square1==0)
+      {
+       let prev=index1-1;
+       let next=(index1+1)%8
+       let down=square1+1
+
+       const prevPiece=pieces.find(pi=>pi.square==square1 && pi.index==prev)
+       const nextPiece=pieces.find(pi=>pi.square==square1 && pi.index==next)
+       const downPiece=pieces.find(pi=>pi.square==down && pi.index==index1)
+
+
+
+ 
+       if(prevPiece!=null && nextPiece!=null && downPiece!=null)
+       {
+           return false
+       }
+       else
+       {
+        return true
+       }
+ 
+      }
+      else if(square1==1)
+      {
+       let prev=index1-1;
+       let next=(index1+1)%8
+       let up=square1-1
+       let down=square1+1
+ 
+       const prevPiece=pieces.find(pi=>pi.square==square1 && pi.index==prev)
+       const nextPiece=pieces.find(pi=>pi.square==square1 && pi.index==next)
+       const downPiece=pieces.find(pi=>pi.square==down && pi.index==index1)
+       const upPiece=pieces.find(pi=>pi.square==up && pi.index==index1)
+
+
+
+
+
+       if(prevPiece!=null && nextPiece!=null && downPiece!=null && upPiece!=null)
+       {
+           return false
+       }
+       else
+       {
+        return true
+       }
+ 
+ 
+      }
+      else if(square1==2)
+      {
+       let prev=index1-1;
+       let next=(index1+1)%8
+       let up=square1-1
+
+       const prevPiece=pieces.find(pi=>pi.square==square1 && pi.index==prev)
+       const nextPiece=pieces.find(pi=>pi.square==square1 && pi.index==next)
+       const upPiece=pieces.find(pi=>pi.square==up && pi.index==index1)
+
+
+
+       if(prevPiece!=null && nextPiece!=null &&  upPiece!=null)
+       {
+           return false
+       }
+       else
+       {
+        return true
+       }
+ 
+      }
+ 
+    }
+}
+
+
+
 
 function isValidConnection(square1, index1, square2, index2)
 {
-  
 
    if(index1%2==0)
    {
@@ -246,8 +292,8 @@ function isValidConnection(square1, index1, square2, index2)
 
      }
 
-   }
- 
+  }
+
 }
    
    useEffect(() => {
@@ -347,7 +393,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
 }
 
 
-        else if(isValidConnection(selectedPiece.square,selectedPiece.index,square,index))
+        else if(isValidConnection(selectedPiece.square,selectedPiece.index,square,index,1))
         {
       
         console.log(selectedPiece.square,selectedPiece.index,square,index)
@@ -455,8 +501,24 @@ console.log("RemovedPies unutar clickPiece: "+removedPiece)
 
           if(countWhite==0 && countBlack==0)
           {
+
+            
+
+
+
             const piece =pieces.find(pi=>pi.square==square && pi.index==index && pi.color==colorr)
       
+                if(isValidPiece(piece.square,piece.index)==true)
+                {
+                  setValidPieceColor('green')
+                }
+                else if(isValidPiece(piece.square,piece.index)==false)
+                {
+                  setValidPieceColor('red')
+                }
+
+
+
             setSelectedPiece(piece)
      
           }
@@ -1065,7 +1127,7 @@ function addRemoveLine(square,index,color,mode)
 
 {/*pieces.map(({square,index,color})=>{ <Piece key={`${square}-${index}-${color}`} square={square}index={index} color={color} />   })*/}
 { lines.map(({x1,y1,x2,y2,color})=><line key={x1+"-"+y1+"-"+x2+"-"+y2+"-"+"-"+color} style={{ stroke:color=='white'?'black':'white', strokeWidth: 0.5}} x1={x1} y1={y1} x2={x2} y2={y2} />)    }  
-{pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}    selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index && selectedPiece?.color==color?true:false}                        onClickPiece={onClickPiece} />)}
+{pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  colorStroke={validPieceColor}    selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index && selectedPiece?.color==color?true:false}                        onClickPiece={onClickPiece} />)}
  
 </svg>
 <div>
