@@ -1,7 +1,7 @@
 import  {useEffect, useState} from 'react'
 import '../css/Mills.css'
 
-const connections = {
+/*const connections = {
     '0-0': ['0-1', '0-7'],
     '0-1': ['0-0', '0-2', '1-1'],
     '0-2': ['0-1', '0-3'],
@@ -28,7 +28,7 @@ const connections = {
     '2-5': ['2-6', '2-4', '1-5'],
     '2-6': ['2-7', '2-5'],
     '2-7': ['2-0', '2-6', '1-7'],
-}
+}*/
 /*const mills=[[0,'00','01','02']
              [0,'02','03','04']
              [0,'04','05','06'] 
@@ -56,21 +56,13 @@ const connections = {
 
 
 
-function areConnected(square1, index1, square2, index2) {
+/*function areConnected(square1, index1, square2, index2) {
     const key1 = `${square1}-${index1}`;
     const key2 = `${square2}-${index2}`;
 
     return connections[key1]?.includes(key2);
 }
-
-
-
-
-
-
-
-
-
+*/
 function Board({position,onClickCircle})
 {
    const start=position
@@ -176,14 +168,11 @@ export default function Mills()
     {square:1,index:0,color:'black'},
    ])*/
    const[lines,setLines]=useState([])
-   const[countWhite,setCountWhite]=useState(4)
-   const[countBlack,setCountBlack]=useState(4)
-
+   const[countWhite,setCountWhite]=useState(9)
+   const[countBlack,setCountBlack]=useState(9)
    const[color,setColor]=useState('white') 
    const[selectedPiece,setSelectedPiece]=useState(null)
-   const[player,setPlayer]=useState("white")
    const[removedPiece,setRemovedPiece]=useState(false)
-   const[clickedPiece,setClickedPiece]=useState(false)
    const [gameOver,setgameOver]=useState(false)
    const [winner,setWinner]=useState("")
    const [square,setSquare]=useState(null)
@@ -195,11 +184,77 @@ export default function Mills()
    }
 
 
+
+
+
+function isValidConnection(square1, index1, square2, index2)
+{
+  
+
+   if(index1%2==0)
+   {
+
+
+    let prev=index1==0?7:index1-1;
+    let next=index1+1;
+
+
+    if((prev==index2 && square1==square2) || (next ==index2  && square1==square2))
+    {
+        return true
+    }
+
+   }
+   else
+   {
+
+     if(square1==0)
+     {
+      let prev=index1-1;
+      let next=(index1+1)%8
+      let down=square1+1
+
+          if((prev==index2 && square1==square2) || (next==index2 && square1==square2) || (down==square2 && index1==index2))
+          {
+            return true
+          }
+
+     }
+     else if(square1==1)
+     {
+      let prev=index1-1;
+      let next=(index1+1)%8
+      let up=square1-1
+      let down=square1+1
+
+      if((prev==index2 && square1==square2) || (next==index2 && square1==square2) || (down==square2 && index1==index2) || (up==square2 && index1==index2))
+      {
+        return true
+      }
+
+
+     }
+     else if(square1==2)
+     {
+      let prev=index1-1;
+      let next=(index1+1)%8
+      let up=square1-1
+      if((prev==index2  && square1==square2) || (next==index2 && square1==square2) ||  (up==square2 && index1==index2))
+      {
+        return true
+      }
+
+     }
+
+   }
+ 
+}
+   
    useEffect(() => {
     // Update the ref whenever lines state changes
     
     addRemoveLine(square,index,color2,1)
-  console.log(" LINES : "+JSON.stringify(lines))
+  console.log(" RemovedPiece : "+removedPiece)
 
 
   const whiteRemain = pieces.filter(s => s.color === 'white').length
@@ -292,7 +347,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
 }
 
 
-        else if(areConnected(selectedPiece.square,selectedPiece.index,square,index))
+        else if(isValidConnection(selectedPiece.square,selectedPiece.index,square,index))
         {
       
         console.log(selectedPiece.square,selectedPiece.index,square,index)
@@ -318,10 +373,10 @@ else if(blackRemain==3 && selectedPiece.color=="black")
        {
 
     
-         if(removedPiece==true)
-         {
-            return
-         } 
+  if(removedPiece==true)
+  {
+    return;
+  } 
   console.log("Ovde smooooooooooooooo")
     if(countWhite>0 || countBlack>0)
     {
@@ -363,7 +418,7 @@ if(gameOver==true)
     return;
 }
 
-
+console.log("RemovedPies unutar clickPiece: "+removedPiece)
       if(removedPiece==true && color==colorr)
       {   
 
@@ -391,7 +446,7 @@ if(gameOver==true)
 
         }
 
-
+       
         
 
       }
@@ -507,10 +562,11 @@ function addRemoveLine(square,index,color,mode)
             if(li==undefined)
             {
             setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
+            setRemovedPiece(true)
             }
 
 
-            setRemovedPiece(true)
+            
        
             }
             else if(mode==2)
@@ -586,7 +642,22 @@ function addRemoveLine(square,index,color,mode)
                     }
                     if(mode==1)
                     {
-                        setRemovedPiece(true)
+                     const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && li.color==color )
+                     if(tr==undefined)
+                     {
+                     setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
+                     setRemovedPiece(true)
+                     }
+                    }
+                    else if(mode==2)
+                    {
+        
+                        const li=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && li.color==color )
+                        if(li)
+                        {
+                        setLines((lines)=>lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2 || li.color!=color))  
+                        }
+                      
                     }
                     
 
@@ -639,10 +710,28 @@ function addRemoveLine(square,index,color,mode)
                         x2=next.square*10+10
                         y2=50
                     }
+                    
+                    
                     if(mode==1)
                     {
-                        setRemovedPiece(true)
+                     const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && li.color==color )
+                     if(tr==undefined)
+                     {
+                     setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
+                     setRemovedPiece(true)
+                     }
                     }
+                    else if(mode==2)
+                    {
+        
+                        const li=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && li.color==color )
+                        if(li)
+                        {
+                        setLines((lines)=>lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2 || li.color!=color))  
+                        }
+                      
+                    }
+                    
                   }
              }
              else if(square==2)
@@ -694,31 +783,30 @@ function addRemoveLine(square,index,color,mode)
                         x2=square*10+10
                         y2=50
                     }
+                    
                     if(mode==1)
                     {
-                        setRemovedPiece(true)
+                     const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && li.color==color )
+                     if(tr==undefined)
+                     {
+                     setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
+                     setRemovedPiece(true)
+                     }
                     }
+                    else if(mode==2)
+                    {
+        
+                        const li=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && li.color==color )
+                        if(li)
+                        {
+                        setLines((lines)=>lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2 || li.color!=color))  
+                        }
+                      
+                    }
+                    
                   }
              }
-            if(mode==1)
-            {
-             const tr=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && li.color==color )
-             if(tr==undefined)
-             {
-             setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
-            
-             }
-            }
-            else if(mode==2)
-            {
-
-                const li=lines.find(li=>li.x1==x1 && li.y1==y1 &&li.x2==x2 &&li.y2==y2 && li.color==color )
-                if(li)
-                {
-                setLines((lines)=>lines.filter(li=>li.x1!=x1 || li.y1!==y1 || li.x2!=x2 || li.y2!=y2 || li.color!=color))  
-                }
-              
-            }
+           
 
         }
 
@@ -805,10 +893,11 @@ function addRemoveLine(square,index,color,mode)
 
                 console.log("PREVIOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS2:  "+x1,y1,x2,y2,color)
                setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
+               setRemovedPiece(true)
                }
 
 
-               setRemovedPiece(true)
+               
                
                }
                else if(mode==2)
@@ -890,9 +979,10 @@ function addRemoveLine(square,index,color,mode)
 
                 console.log("NEXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT:  "+x1,y1,x2,y2,color)
                 setLines(l=>[...l,{x1,y1,x2,y2,color:color}])
+                setRemovedPiece(true)
                }
 
-              setRemovedPiece(true)
+              
      
               }
               else if(mode==2)
@@ -914,6 +1004,7 @@ function addRemoveLine(square,index,color,mode)
     {
       return false
     }
+
 }
 
 
