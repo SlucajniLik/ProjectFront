@@ -124,8 +124,22 @@ export default function Mills()
 
 
 
-function isValidPiece(square1, index1)
+function isValidPiece(square1, index1,color)
 {
+
+  const remainPices = pieces.filter(s => s.color ===color).length
+ 
+    if(countWhite==0 && countBlack==0 && remainPices==3)
+    {
+      return true
+    }
+
+
+
+
+
+
+
   if(index1%2==0)
     {
  
@@ -322,8 +336,37 @@ function isValidConnection(square1, index1, square2, index2)
       console.log("Beli je pobedio")
   }
 
+console.log("Colorrrrrrrrrrrrrrrrrrrrrrrrrrrrr: "+color)
 
-  }, [lines,square,index,color2,countWhite,countBlack,gameOver,pieces.length]);
+if(countWhite==0 && countBlack==0)
+{
+const remainPices = pieces.filter(s => s.color === color)
+let checkPiece=false
+let colWin=color=='white'?'black':'white'
+for(let i=0;i<remainPices.length;i++)
+{
+
+  if(isValidPiece(remainPices[i].square,remainPices[i].index,remainPices[i].color)==true)
+  {
+
+    console.log(" ODGOVOR:   "+remainPices[i].square,remainPices[i].index,remainPices[i].color)
+     checkPiece=true
+     break;
+  }
+}
+
+if(checkPiece==false)
+{
+  setgameOver(true)
+  console.log(colWin+"  je pobedio  u nerasporedu"+checkPiece)
+  setWinner(colWin)
+}
+
+}
+
+
+
+  }, [lines,square,index,color2,countWhite,countBlack,gameOver,pieces,validPieceColor,winner]);
 
 
 
@@ -508,11 +551,11 @@ console.log("RemovedPies unutar clickPiece: "+removedPiece)
 
             const piece =pieces.find(pi=>pi.square==square && pi.index==index && pi.color==colorr)
       
-                if(isValidPiece(piece.square,piece.index)==true)
+                if(isValidPiece(piece.square,piece.index,piece.color)==true)
                 {
                   setValidPieceColor('green')
                 }
-                else if(isValidPiece(piece.square,piece.index)==false)
+                else if(isValidPiece(piece.square,piece.index,piece.color)==false)
                 {
                   setValidPieceColor('red')
                 }
