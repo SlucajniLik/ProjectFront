@@ -1,5 +1,6 @@
 import  {useEffect, useState} from 'react'
 import '../css/Mills.css'
+import axios from 'axios'
 function Board({position,onClickCircle})
 {
    const start=position
@@ -116,12 +117,201 @@ export default function Mills()
    const [index,setIndex]=useState(null)
    const [color2,setColor2]=useState(null)
    const[validPieceColor,setValidPieceColor]=useState('transparent')
+
+
+
+
+
+   
+
+const [moveStone, setMoveStone] = useState(null);
+  
+function play(move)
+{
+
+ if(move[0]=='set')
+ {
+
+const {square,index,color} = transformToPiece(move)
+
+onClickCircle(square,index)
+ }
+ else if (move[0]=='remove')
+ {
+  const {square,index,color} = transformToPiece(move)
+
+onClickPiece(square,index,color)
+ }
+ else if(move[0]=='move')
+ {
+  const [from,to]=transformToPiece(move)
+  onClickPiece(from.square,from.index,from.color)
+  setMoveStone(to)
+ }
+}
+
+useEffect(() => {
+  console.log('move to stone', moveStone)
+  if (moveStone) {
+    onClickCircle(moveStone.square, moveStone.index);
+  }
+  setMoveStone(null);
+}, [moveStone])
+
+
+
+
+
+
+    function transformIndex(index) {
+      const mapping = [
+          [0, 0],  
+          [0, 1],  
+          [0, 2],  
+          [1, 2],
+          [2, 2],
+          [2, 1],
+          [2, 0],
+          [1, 0]
+      ];
+  
+      if (index < mapping.length) {
+          return mapping[index];
+      }
+  }
+  
+function transformToMatrix()
+{
+
+
+  const matrix = [];
+
+  for (let i = 0; i < 3; i++) {
+      const row = [];
+      for (let j = 0; j < 3; j++) {
+          const column = Array(3).fill(0);
+          row.push(column);
+      } 
+      matrix.push(row);  
+  }
+
+
+
+  
+  pieces.forEach(({square, index,color}) => {
+      const currentPlayer = color === 'white' ? 1 : -1;
+      const [y, z] = transformIndex(index);
+      matrix[square][y][z] = currentPlayer;
+     
+  });
+
+  const whiteRemain = pieces.filter(s => s.color === 'white').length
+  const blackRemain = pieces.filter(s => s.color === 'black').length
+const data=
+{
+  countWhite:countWhite,
+  countBlack:countBlack,
+  onBoardWhite:whiteRemain,
+  onBoardBlack:blackRemain,
+  pieces:matrix
+}
+
+const information={
+
+  data:data,
+  currentPlayer:removedPiece==false?color === 'white' ? 1 : -1:color === 'white' ? -1 : 1,
+  isMills:removedPiece,
+  hardness:'hard'
+}
+  return information
+}
+
+function transformToPiece(move)
+{
+
+if(move[0]=='set')
+{
+  return TransformMove(move)
+}
+else if(move[0]=='remove')
+{
+  return TransformMove(move)
+}
+else if(move[0]=='move'){
+ const from=TransformMove([move[0],move[1],move[5],move[6],move[7]])
+ const to=TransformMove([move[0],move[1],move[2],move[3],move[4]])
+ return [from ,to];
+}
+
+
+
+
+}
+
+
+function TransformMove(move) {
+  const [type, player, x, y, z] = move;
+  const square = x;
+
+  const indexMapping = {
+      '0-0': 0,
+      '0-1': 1,
+      '0-2': 2,
+      '1-2': 3,
+      '2-2': 4,
+      '2-1': 5,
+      '2-0': 6,
+      '1-0': 7,
+     
+  };
+
+  const indexKey = `${y}-${z}`;
+  const index = indexMapping[indexKey];
+
+  return { square, index,color: player === 1 ? 'white' : 'black' };
+}
+
+
+useEffect(
+  ()=>{
+  
+   /* if (color=='white')
+    return */
+   const game=transformToMatrix()
+   console.log('pocetna matrica'+JSON.stringify(game))
+   
+     axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
+      
+        res=>{
+          console.log("Ovo je potez:"+res.data.move)
+         play(res.data.move)
+        
+        
+        }
+      
+     )
+  
+
+
+     console.log(transformToMatrix())
+
+
+  
+  },[color,removedPiece])
+
+
+
+
+
+
+
+
+
+
    function changeColor()
    {
     setColor(cl=>cl==='white'?'black':'white')
    }
-
-
 
 
 function isValidPiece(square1, index1,color)

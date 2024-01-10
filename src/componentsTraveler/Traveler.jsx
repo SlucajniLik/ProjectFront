@@ -39,7 +39,7 @@ useEffect(
   
     graph=createMatrixFromExisting(map)
    
-     axios.post('http://127.0.0.1:8000/Pytnik/Search/',{name:agent,matrix:graph}).then(
+     axios.post('http://127.0.0.1:8000/Games/Search/',{name:agent,matrix:graph}).then(
       
         res=>{
           setPath(res.data.path)
