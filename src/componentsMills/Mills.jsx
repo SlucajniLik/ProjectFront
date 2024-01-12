@@ -118,13 +118,13 @@ export default function Mills({type,dificulity})
    const [color2,setColor2]=useState(null)
    const[validPieceColor,setValidPieceColor]=useState('transparent')
    const myInputRef = useRef(null);
-
-
+  
+   const clicked=useRef(null)
 
 
    
 
-const [moveStone, setMoveStone] = useState(null);
+const [movePiece, setMovePiece] = useState(null);
   
 function play(move)
 {
@@ -143,16 +143,12 @@ onClickCircle(square,index)
 onClickPiece(square,index,color === 'white' ? 'black' : 'white')
  }
  else if(move[0]=='move')
- {
+ {    
   const [from,to]=transformToPiece(move)
   onClickPiece(from.square,from.index,from.color)
-  setMoveStone(to)
+  setMovePiece(to)
  }
 }
-
-
-
-
 
 
 
@@ -170,12 +166,17 @@ useEffect(() => {
   
   if(color=='black' && removedPiece==true)
   {return}
-  console.log('move to stone', moveStone)
-  if (moveStone) {
-    onClickCircle(moveStone.square, moveStone.index);
+
+  if (movePiece) {
+    onClickCircle(movePiece.square, movePiece.index);
   }
-  setMoveStone(null);
-}, [moveStone])
+  setMovePiece(null);
+
+
+
+  console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+
+}, [movePiece])
 
 
 
@@ -258,7 +259,7 @@ else if(move[0]=='remove')
   return TransformMove(move)
 }
 else if(move[0]=='move'){
-  console.log(removedPiece,color+"Ovdeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+ 
  const from=TransformMove([move[0],move[1],move[5],move[6],move[7]])
  const to=TransformMove([move[0],move[1],move[2],move[3],move[4]])
  return [from ,to];
@@ -292,10 +293,10 @@ function TransformMove(move) {
   return { square, index,color: player === 1 ? 'white' : 'black' };
 }
 
-
+const[ind,setInd]=useState(null)
 useEffect(
   ()=>{
-  
+    
    /* if (color=='white')
     return */
 
@@ -305,12 +306,23 @@ useEffect(
     }
    if(color=='white' && removedPiece==false)
     {return}
-    if(color=='black' && myInputRef.current==true)
-    {return}
+    if(color === 'black' && removedPiece==true)
+    {
+      return;
+    
+    }
+    if(checkOneMills(square,index,color2) && color2=='white')
+    {
+      setSquare(null)
+      setIndex(null)
+      setColor2(null)
+      return;
+    }
+  
 
    const game=transformToMatrix()
    console.log('pocetna matrica'+JSON.stringify(game))
-   console.log(color,myInputRef.current+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+   console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPP")
      axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
       
         res=>{
@@ -326,15 +338,9 @@ useEffect(
 
      console.log(transformToMatrix())
 
-
+console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
   
   },[color,removedPiece])
-
-
-
-
-
-
 
 
 
@@ -537,6 +543,10 @@ function isValidConnection(square1, index1, square2, index2)
   //console.log(" RemovedPiece : "+removedPiece)
 
 
+
+  
+
+
   const whiteRemain = pieces.filter(s => s.color === 'white').length
   const blackRemain = pieces.filter(s => s.color === 'black').length 
 
@@ -585,7 +595,7 @@ if(checkPiece==false)
 }
 
 
-
+console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD')
   }, [lines,square,index,color2,countWhite,countBlack,gameOver,pieces,validPieceColor,winner]);
 
 
@@ -605,11 +615,21 @@ if(checkPiece==false)
       return true
   }
 
+function checkOneMills(square,index,color)
+{
+  if(addRemoveLine(square,index,color,3)==true)
+  {
+   // console.log("----------"+pieces[i].square,pieces[i].index,color,3)
+      return true;
+  }
+  return false
+}
+
+
 
 
 function onClickCircle(square,index)
-{
-   
+{ 
   
 if(selectedPiece!=null)
 {
@@ -618,7 +638,10 @@ if(countWhite==0 && countBlack==0 )
 {
 const whiteRemain = pieces.filter(s => s.color === 'white').length
 const blackRemain = pieces.filter(s => s.color === 'black').length 
-                 
+             
+
+
+
 if(whiteRemain==3 && selectedPiece.color=="white")
 {
 
@@ -634,7 +657,8 @@ if(whiteRemain==3 && selectedPiece.color=="white")
     setPices(p=>[...p,{square,index,color}])
     changeColor()
     setSelectedPiece(null)
-
+   
+       
 }
 else if(blackRemain==3 && selectedPiece.color=="black")
 {
@@ -652,6 +676,8 @@ else if(blackRemain==3 && selectedPiece.color=="black")
     setPices(p=>[...p,{square,index,color}])
     changeColor()
     setSelectedPiece(null)
+   
+       
     
 }
 
@@ -671,6 +697,9 @@ else if(blackRemain==3 && selectedPiece.color=="black")
         setPices(p=>[...p,{square,index,color}])
         changeColor()
         setSelectedPiece(null)
+
+       
+        
         }
 
 
