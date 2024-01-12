@@ -1,4 +1,4 @@
-import  {useEffect, useState} from 'react'
+import  {useEffect, useState,useRef} from 'react'
 import '../css/Mills.css'
 import axios from 'axios'
 function Board({position,onClickCircle})
@@ -97,7 +97,7 @@ return (
 
 
 
-export default function Mills()
+export default function Mills({type,dificulity})
 {
 
     const[pieces,setPices]=useState([])
@@ -117,7 +117,7 @@ export default function Mills()
    const [index,setIndex]=useState(null)
    const [color2,setColor2]=useState(null)
    const[validPieceColor,setValidPieceColor]=useState('transparent')
-
+   const myInputRef = useRef(null);
 
 
 
@@ -140,7 +140,7 @@ onClickCircle(square,index)
  {
   const {square,index,color} = transformToPiece(move)
 
-onClickPiece(square,index,color)
+onClickPiece(square,index,color === 'white' ? 'black' : 'white')
  }
  else if(move[0]=='move')
  {
@@ -150,7 +150,26 @@ onClickPiece(square,index,color)
  }
 }
 
+
+
+
+
+
+
+
 useEffect(() => {
+
+  if (type==1 && dificulity==0 )
+  {
+    return;
+  }
+
+  if(color=='white' )
+  {return}
+  console.log("Ovde j moveStone:  "+color,removedPiece)
+  
+  if(color=='black' && removedPiece==true)
+  {return}
   console.log('move to stone', moveStone)
   if (moveStone) {
     onClickCircle(moveStone.square, moveStone.index);
@@ -207,6 +226,7 @@ function transformToMatrix()
 
   const whiteRemain = pieces.filter(s => s.color === 'white').length
   const blackRemain = pieces.filter(s => s.color === 'black').length
+  console.log(JSON.stringify(pieces))
 const data=
 {
   countWhite:countWhite,
@@ -238,6 +258,7 @@ else if(move[0]=='remove')
   return TransformMove(move)
 }
 else if(move[0]=='move'){
+  console.log(removedPiece,color+"Ovdeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
  const from=TransformMove([move[0],move[1],move[5],move[6],move[7]])
  const to=TransformMove([move[0],move[1],move[2],move[3],move[4]])
  return [from ,to];
@@ -277,9 +298,19 @@ useEffect(
   
    /* if (color=='white')
     return */
+
+    if (type==1 && dificulity==0 )
+    {
+      return;
+    }
+   if(color=='white' && removedPiece==false)
+    {return}
+    if(color=='black' && myInputRef.current==true)
+    {return}
+
    const game=transformToMatrix()
    console.log('pocetna matrica'+JSON.stringify(game))
-   
+   console.log(color,myInputRef.current+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
      axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
       
         res=>{
@@ -298,7 +329,6 @@ useEffect(
 
   
   },[color,removedPiece])
-
 
 
 
@@ -340,7 +370,7 @@ function isValidPiece(square1, index1,color)
     const prevPiece=pieces.find(pi=>pi.square==square1 && pi.index==prev)
     const nextPiece=pieces.find(pi=>pi.square==square1 && pi.index==next)
 
-console.log(index1,square1,JSON.stringify(prevPiece),JSON.stringify(nextPiece))
+//console.log(index1,square1,JSON.stringify(prevPiece),JSON.stringify(nextPiece))
 
 
 
@@ -504,7 +534,7 @@ function isValidConnection(square1, index1, square2, index2)
     // Update the ref whenever lines state changes
     
     addRemoveLine(square,index,color2,1)
-  console.log(" RemovedPiece : "+removedPiece)
+  //console.log(" RemovedPiece : "+removedPiece)
 
 
   const whiteRemain = pieces.filter(s => s.color === 'white').length
@@ -514,7 +544,7 @@ function isValidConnection(square1, index1, square2, index2)
   if(countBlack==0 && countWhite==0 && whiteRemain==2)
   {
 
-    console.log("Crni je pobedio")
+    //console.log("Crni je pobedio")
     setWinner("Black")
      setgameOver(true)
 
@@ -523,10 +553,10 @@ function isValidConnection(square1, index1, square2, index2)
   {
       setWinner("White")
       setgameOver(true)
-      console.log("Beli je pobedio")
+     // console.log("Beli je pobedio")
   }
 
-console.log("Colorrrrrrrrrrrrrrrrrrrrrrrrrrrrr: "+color)
+//console.log("Colorrrrrrrrrrrrrrrrrrrrrrrrrrrrr: "+color)
 
 if(countWhite==0 && countBlack==0)
 {
@@ -539,7 +569,7 @@ for(let i=0;i<remainPices.length;i++)
   if(isValidPiece(remainPices[i].square,remainPices[i].index,remainPices[i].color)==true)
   {
 
-    console.log(" ODGOVOR:   "+remainPices[i].square,remainPices[i].index,remainPices[i].color)
+   // console.log(" ODGOVOR:   "+remainPices[i].square,remainPices[i].index,remainPices[i].color)
      checkPiece=true
      break;
   }
@@ -548,7 +578,7 @@ for(let i=0;i<remainPices.length;i++)
 if(checkPiece==false)
 {
   setgameOver(true)
-  console.log(colWin+"  je pobedio  u nerasporedu"+checkPiece)
+  //console.log(colWin+"  je pobedio  u nerasporedu"+checkPiece)
   setWinner(colWin)
 }
 
@@ -567,7 +597,7 @@ if(checkPiece==false)
         {
           if(addRemoveLine(pieces[i].square,pieces[i].index,pieces[i].color,3)==false)
           {
-            console.log("----------"+pieces[i].square,pieces[i].index,color,3)
+           // console.log("----------"+pieces[i].square,pieces[i].index,color,3)
               return false;
           }
         }
@@ -629,7 +659,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
         else if(isValidConnection(selectedPiece.square,selectedPiece.index,square,index,1))
         {
       
-        console.log(selectedPiece.square,selectedPiece.index,square,index)
+       // console.log(selectedPiece.square,selectedPiece.index,square,index)
         addRemoveLine(selectedPiece.square,selectedPiece.index,selectedPiece.color,2)
         setSquare(square)
         setIndex(index)
@@ -656,7 +686,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
   {
     return;
   } 
-  console.log("Ovde smooooooooooooooo")
+  //console.log("Ovde smooooooooooooooo")
     if(countWhite>0 || countBlack>0)
     {
     if(color=="white")
@@ -664,7 +694,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
      setPices(p=>[...p,{square,index,color}])
      addRemoveLine(square,index,color,1)
      setCountWhite(countWhite-1)
-     console.log("Whiteeee:: "+color)
+    // console.log("Whiteeee:: "+color)
      changeColor()
  
     }
@@ -674,7 +704,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
      setPices(p=>[...p,{square,index,color}])
      addRemoveLine(square,index,color,1)
      setCountBlack(countBlack-1)
-     console.log("Black:: "+color)
+     //console.log("Black:: "+color)
      changeColor()
  
     }
@@ -697,7 +727,7 @@ if(gameOver==true)
     return;
 }
 
-console.log("RemovedPies unutar clickPiece: "+removedPiece)
+//console.log("RemovedPies unutar clickPiece: "+removedPiece)
       if(removedPiece==true && color==colorr)
       {   
 
@@ -706,6 +736,7 @@ console.log("RemovedPies unutar clickPiece: "+removedPiece)
         {
             setPices(pieces.filter(pi=>pi.square!==square || pi.index !== index || pi.color!==colorr))
             setRemovedPiece(false)
+            myInputRef.current=false
 
         }
         else if(addRemoveLine(square,index,colorr,3)==true && checkAllPiecess(colorr)==true)
@@ -720,6 +751,7 @@ console.log("RemovedPies unutar clickPiece: "+removedPiece)
  
          setPices(pieces.filter(pi=>pi.square!==square || pi.index !== index || pi.color!==colorr))
         setRemovedPiece(false)
+        myInputRef.current=false
 
 
 
@@ -776,7 +808,7 @@ function addRemoveLine(square,index,color,mode)
     
 
 
-  console.log("square: "+square+" index: "+index+" color : "+color+" mode: "+mode )
+ //console.log("square: "+square+" index: "+index+" color : "+color+" mode: "+mode )
 
      
     if(index %2 !==0 )
@@ -803,8 +835,8 @@ function addRemoveLine(square,index,color,mode)
 
 
 
-            console.log("previuous square: "+previous.square+"previous index: "+previous.index+"previous color : "+previous.color+" mode: "+mode )
-            console.log("next square: "+next.square+"next index: "+next.index+"next color : "+next.color+" mode: "+mode )
+          //  console.log("previuous square: "+previous.square+"previous index: "+previous.index+"previous color : "+previous.color+" mode: "+mode )
+           // console.log("next square: "+next.square+"next index: "+next.index+"next color : "+next.color+" mode: "+mode )
 
 
 
@@ -858,6 +890,7 @@ function addRemoveLine(square,index,color,mode)
             {
             setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
             setRemovedPiece(true)
+            myInputRef.current=true
             }
 
 
@@ -942,6 +975,7 @@ function addRemoveLine(square,index,color,mode)
                      {
                      setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
                      setRemovedPiece(true)
+                     myInputRef.current=true
                      }
                     }
                     else if(mode==2)
@@ -1014,6 +1048,7 @@ function addRemoveLine(square,index,color,mode)
                      {
                      setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
                      setRemovedPiece(true)
+                     myInputRef.current=true
                      }
                     }
                     else if(mode==2)
@@ -1086,6 +1121,7 @@ function addRemoveLine(square,index,color,mode)
                      {
                      setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
                      setRemovedPiece(true)
+                     myInputRef.current=true
                      }
                     }
                     else if(mode==2)
@@ -1186,9 +1222,10 @@ function addRemoveLine(square,index,color,mode)
                {
 
 
-                console.log("PREVIOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS2:  "+x1,y1,x2,y2,color)
+               // console.log("PREVIOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS2:  "+x1,y1,x2,y2,color)
                setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
                setRemovedPiece(true)
+               myInputRef.current=true
                }
 
 
@@ -1272,9 +1309,10 @@ function addRemoveLine(square,index,color,mode)
                if(tr==undefined)
                {
 
-                console.log("NEXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT:  "+x1,y1,x2,y2,color)
+               // console.log("NEXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT:  "+x1,y1,x2,y2,color)
                 setLines(l=>[...l,{x1,y1,x2,y2,color:color}])
                 setRemovedPiece(true)
+                myInputRef.current=true
                }
 
               

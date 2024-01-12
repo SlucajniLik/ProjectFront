@@ -14,12 +14,10 @@ const [loading,setLoading]=useState(true)
 const [error,setError]=useState(null)
 
 
-///////
 
 const [games,setGames]=useState(0)
-
-
-
+const [type, setType] = useState(null);
+const [dificulity, setDificulity] = useState(null);
 
 
 useEffect(
@@ -55,8 +53,38 @@ if(loading)
 
 if(error)
 {
-  <p>{JSON.stringify(error)}</p>
+  return<p>{JSON.stringify(error)}</p>
 }
+
+if (games === 1 && type === null) {
+  return (
+    
+    <div>
+      <h1>Izaberite opciju</h1>
+      <button onClick={() => {setType(1) 
+        setDificulity(0)}}>Covek protiv coveka</button>
+      <button onClick={() => setType(2)}>Covek protiv racunara</button>
+      <button onClick={() => setType(3)}>Racunar protiv racunara</button>
+    </div>
+  );
+}
+
+if (games === 1 && type === 2 && dificulity==null) {
+  return (
+    
+    <div>
+      <h1>Izaberite opciju</h1>
+      <button onClick={() => setDificulity(1)}>Lako</button>
+      <button onClick={() => setDificulity(2)}>Srednje</button>
+      <button onClick={() => setDificulity(3)}>Tesko</button>
+    </div>
+  );
+}
+
+
+
+
+
 
   /*return (
     <>
@@ -72,16 +100,26 @@ if(error)
   return (
     <>
   <div>
-  <button  onClick={()=>{setGames(0)}}>Pytnik</button>
-<button  onClick={()=>{setGames(1)}}>Mills</button>
+  <button  onClick={()=>{setGames(0)
+  setType(null)
+  }}>Pytnik</button>
+<button  onClick={()=>{setGames(1)
+setType(null)
+}}>Mills</button>
 
 
   </div>
 
 
 
+
+
+
 {  games==0 && <Traveler/>}
-{  games==1 && <Mills/>}
+
+
+{ /* games==1 && <Mills/>*/}
+{games === 1 && type !== null  && dificulity!=null && <Mills type={type} dificulity={dificulity} />}
 
    </>
   )
