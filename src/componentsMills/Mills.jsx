@@ -180,6 +180,39 @@ useEffect(() => {
 
 
 
+useEffect(() => {
+
+  if (type==1 && dificulity==0 )
+  {
+    return;
+  }
+
+  if(type==2)
+  {
+    return
+  }
+
+  if(color=='black' )
+  {return}
+  console.log("Ovde j moveStone:  "+color,removedPiece)
+  
+  if(color=='white' && removedPiece==true)
+  {return}
+
+  if (movePiece) {
+    onClickCircle(movePiece.square, movePiece.index);
+  }
+  setMovePiece(null);
+
+
+
+  console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+
+}, [movePiece])
+
+
+
+
 
 
 
@@ -304,6 +337,10 @@ useEffect(
     {
       return;
     }
+
+
+
+
    if(color=='white' && removedPiece==false)
     {return}
     if(color === 'black' && removedPiece==true)
@@ -341,6 +378,61 @@ useEffect(
 console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
   
   },[color,removedPiece])
+
+
+
+  useEffect(
+    ()=>{
+      
+     /* if (color=='white')
+      return */
+  
+      if (type==1 && dificulity==0 )
+      {
+        return;
+      }
+      if(type==2)
+      {
+        return
+      }
+    
+     if(color=='black' && removedPiece==false)
+      {return}
+      if(color === 'white' && removedPiece==true)
+      {
+        return;
+      
+      }
+      if(checkOneMills(square,index,color2) && color2=='black')
+      {
+        setSquare(null)
+        setIndex(null)
+        setColor2(null)
+        return;
+      }
+    
+  
+     const game=transformToMatrix()
+     console.log('pocetna matrica'+JSON.stringify(game))
+     console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPPBlackkkkkkkk")
+       axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
+        
+          res=>{
+            console.log("Ovo je potez:"+res.data.move)
+           play(res.data.move)
+          
+          
+          }
+        
+       )
+    
+  
+  
+       console.log(transformToMatrix())
+  
+  console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
+    
+    },[color,removedPiece])
 
 
 
