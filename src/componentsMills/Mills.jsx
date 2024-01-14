@@ -121,7 +121,7 @@ export default function Mills({type,dificulity})
   
    const clicked=useRef(null)
 
-
+   const isComputer=useRef(null)
    
 
 const [movePiece, setMovePiece] = useState(null);
