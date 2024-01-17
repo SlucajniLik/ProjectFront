@@ -80,6 +80,17 @@ if (games === 1 && type === 2 && dificulity==null) {
     </div>
   );
 }
+if (games === 1 && type === 3 && dificulity==null) {
+  return (
+    
+    <div>
+      <h1>Izaberite opciju</h1>
+      <button onClick={() => setDificulity(1)}>Lako</button>
+      <button onClick={() => setDificulity(2)}>Srednje</button>
+      <button onClick={() => setDificulity(3)}>Tesko</button>
+    </div>
+  );
+}
 
 
 

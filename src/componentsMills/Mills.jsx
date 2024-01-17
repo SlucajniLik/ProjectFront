@@ -100,6 +100,8 @@ return (
 export default function Mills({type,dificulity})
 {
 
+  console.log(type+"    ffff")
+
     const[pieces,setPices]=useState([])
   /* const[pieces,setPices]=useState([
     {square:0,index:0,color:'white'},
@@ -125,9 +127,14 @@ export default function Mills({type,dificulity})
    
 
 const [movePiece, setMovePiece] = useState(null);
-  
-function play(move)
+const [removePiece, setRemovePiece] = useState(null);
+const [removeTempPiece, setRemoveTempPiece] = useState(null);
+function play(move,moveRem)
 {
+
+  console.log(moveRem+"   iiiiiiiiiiiiiiiiiiiiiiiii")
+
+
 
  if(move[0]=='set')
  {
@@ -135,24 +142,58 @@ function play(move)
 const {square,index,color} = transformToPiece(move)
 
 onClickCircle(square,index)
- }
- else if (move[0]=='remove')
- {
-  const {square,index,color} = transformToPiece(move)
 
-onClickPiece(square,index,color === 'white' ? 'black' : 'white')
+if (moveRem!=null)
+{
+ const {square,index,color} = transformToPiece(moveRem)
+
+ setRemovePiece({square,index,color})
+
+}
+
+
  }
  else if(move[0]=='move')
  {    
   const [from,to]=transformToPiece(move)
   onClickPiece(from.square,from.index,from.color)
-  setMovePiece(to)
+   if(moveRem==undefined)
+   {
+    setMovePiece({ square: to.square, index: to.index,color:to.color })
+   }
+  
+
+
+  if (moveRem!=null)
+{
+ 
+ const {square,index,color} = transformToPiece(moveRem)
+ setMovePiece({ square: to.square, index: to.index,color:to.color,removedPi:{square,index,color} })
+ //setRemoveTempPiece({square,index,color})
+
+}
+
  }
+
+ 
+
+  
 }
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////white
 useEffect(() => {
 
   if (type==1 && dificulity==0 )
@@ -168,7 +209,17 @@ useEffect(() => {
   {return}
 
   if (movePiece) {
+
+ 
     onClickCircle(movePiece.square, movePiece.index);
+    console.log(JSON.stringify(movePiece.removedPi)+" oooooooooooooooooooooooooooooooooooooo777")
+    if(movePiece.removedPi)
+    {
+      
+      setRemoveTempPiece(movePiece.removedPi)
+      //setRemovedPiece(true)
+    }
+    
   }
   setMovePiece(null);
 
@@ -180,6 +231,79 @@ useEffect(() => {
 
 
 
+
+
+useEffect(() => {
+
+ 
+
+
+  if (removePiece)
+  {  
+    console.log(removePiece.square,removePiece.index,removePiece.color=='white'?'black':'white'+'   LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+     onClickPiece(removePiece.square,removePiece.index,removePiece.color=='white'?'black':'white')
+     //setRemovedPiece(false)
+  }
+  setRemovePiece(null)
+    
+  
+  }, [removePiece])
+
+  useEffect(
+    ()=>{
+      
+     /* if (color=='white')
+      return */
+  
+      if (type==1 && dificulity==0 )
+      {
+        return;
+      }
+  
+      if(gameOver){return}
+    if(removePiece){return}
+    if (movePiece){return}
+  
+     if(color=='white' && removedPiece==false)
+      {return}
+      if(color === 'black' && removedPiece==true)
+      {
+        return;
+      
+      }
+      if(checkOneMills(square,index,color2) && color2=='white')
+      {
+        setSquare(null)
+        setIndex(null)
+        setColor2(null)
+        return;
+      }
+    
+  
+     const game=transformToMatrix()
+     console.log('pocetna matrica'+JSON.stringify(game))
+     console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPP")
+       axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
+        
+          res=>{
+            console.log("Ovo je potez:"+res.data.move)
+  
+           play(res.data.move[0],res.data.move[1])
+          
+          
+          }
+        
+       )
+    
+  
+  
+       console.log(transformToMatrix())
+  
+  console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
+    
+    },[color,removedPiece])
+/////////////////////////////////////////////////////////////////////////////////////////////////////////white
+////////////////////////////////////////////////////////////////////////////////////////////////////////black  
 useEffect(() => {
 
   if (type==1 && dificulity==0 )
@@ -191,7 +315,6 @@ useEffect(() => {
   {
     return
   }
-
   if(color=='black' )
   {return}
   console.log("Ovde j moveStone:  "+color,removedPiece)
@@ -200,7 +323,17 @@ useEffect(() => {
   {return}
 
   if (movePiece) {
+
+ 
     onClickCircle(movePiece.square, movePiece.index);
+    console.log(JSON.stringify(movePiece.removedPi)+" oooooooooooooooooooooooooooooooooooooo777")
+    if(movePiece.removedPi)
+    {
+      
+      setRemoveTempPiece(movePiece.removedPi)
+      //setRemovedPiece(true)
+    }
+    
   }
   setMovePiece(null);
 
@@ -209,6 +342,92 @@ useEffect(() => {
   console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
 
 }, [movePiece])
+
+
+
+
+
+/*useEffect(() => {
+
+ 
+  if(type==2)
+  {
+    return
+  }
+
+  if (removePiece)
+  {  
+    console.log(removePiece.square,removePiece.index,removePiece.color=='white'?'black':'white'+'   LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+     onClickPiece(removePiece.square,removePiece.index,removePiece.color=='white'?'black':'white')
+     //setRemovedPiece(false)
+  }
+  setRemovePiece(null)
+    
+  
+  }, [removePiece])*/
+
+  useEffect(
+    ()=>{
+      
+     /* if (color=='white')
+      return */
+  
+      if (type==1 && dificulity==0 )
+      {
+        return;
+      }
+      if(type==2)
+      {
+        return
+      }
+  if(gameOver){return}
+    if(removePiece){return}
+    if (movePiece){return}
+  
+     if(color=='black' && removedPiece==false)
+      {return}
+      if(color === 'white' && removedPiece==true)
+      {
+        return;
+      
+      }
+      if(checkOneMills(square,index,color2) && color2=='black')
+      {
+        setSquare(null)
+        setIndex(null)
+        setColor2(null)
+        return;
+      }
+    
+  
+     const game=transformToMatrix()
+     console.log('pocetna matrica'+JSON.stringify(game))
+     console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPP")
+       axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
+        
+          res=>{
+            console.log("Ovo je potez:"+res.data.move)
+  
+           play(res.data.move[0],res.data.move[1])
+          
+          
+          }
+        
+       )
+    
+  
+  
+       console.log(transformToMatrix())
+  
+  console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
+    
+    },[color,removedPiece])
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
 
 
@@ -275,7 +494,7 @@ const information={
   data:data,
   currentPlayer:removedPiece==false?color === 'white' ? 1 : -1:color === 'white' ? -1 : 1,
   isMills:removedPiece,
-  hardness:'hard'
+  hardness:dificulity
 }
   return information
 }
@@ -326,113 +545,8 @@ function TransformMove(move) {
   return { square, index,color: player === 1 ? 'white' : 'black' };
 }
 
-const[ind,setInd]=useState(null)
-useEffect(
-  ()=>{
-    
-   /* if (color=='white')
-    return */
-
-    if (type==1 && dificulity==0 )
-    {
-      return;
-    }
 
 
-
-
-   if(color=='white' && removedPiece==false)
-    {return}
-    if(color === 'black' && removedPiece==true)
-    {
-      return;
-    
-    }
-    if(checkOneMills(square,index,color2) && color2=='white')
-    {
-      setSquare(null)
-      setIndex(null)
-      setColor2(null)
-      return;
-    }
-  
-
-   const game=transformToMatrix()
-   console.log('pocetna matrica'+JSON.stringify(game))
-   console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPP")
-     axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
-      
-        res=>{
-          console.log("Ovo je potez:"+res.data.move)
-         play(res.data.move)
-        
-        
-        }
-      
-     )
-  
-
-
-     console.log(transformToMatrix())
-
-console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
-  
-  },[color,removedPiece])
-
-
-
-  useEffect(
-    ()=>{
-      
-     /* if (color=='white')
-      return */
-  
-      if (type==1 && dificulity==0 )
-      {
-        return;
-      }
-      if(type==2)
-      {
-        return
-      }
-    
-     if(color=='black' && removedPiece==false)
-      {return}
-      if(color === 'white' && removedPiece==true)
-      {
-        return;
-      
-      }
-      if(checkOneMills(square,index,color2) && color2=='black')
-      {
-        setSquare(null)
-        setIndex(null)
-        setColor2(null)
-        return;
-      }
-    
-  
-     const game=transformToMatrix()
-     console.log('pocetna matrica'+JSON.stringify(game))
-     console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPPBlackkkkkkkk")
-       axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
-        
-          res=>{
-            console.log("Ovo je potez:"+res.data.move)
-           play(res.data.move)
-          
-          
-          }
-        
-       )
-    
-  
-  
-       console.log(transformToMatrix())
-  
-  console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
-    
-    },[color,removedPiece])
 
 
 
@@ -633,7 +747,12 @@ function isValidConnection(square1, index1, square2, index2)
     
     addRemoveLine(square,index,color2,1)
   //console.log(" RemovedPiece : "+removedPiece)
-
+if(countBlack==0 && countWhite==0)
+{
+  setRemovePiece(removeTempPiece)
+  setRemoveTempPiece(null)
+}
+ 
 
 
   
@@ -688,7 +807,7 @@ if(checkPiece==false)
 
 
 console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD')
-  }, [lines,square,index,color2,countWhite,countBlack,gameOver,pieces,validPieceColor,winner]);
+  }, [lines,square,index,color2,countWhite,countBlack,gameOver,pieces,validPieceColor,winner,removePiece,removeTempPiece]);
 
 
 
@@ -848,7 +967,7 @@ if(gameOver==true)
     return;
 }
 
-//console.log("RemovedPies unutar clickPiece: "+removedPiece)
+console.log("RemovedPies unutar clickPieceeeeeeeeeeeeeeeeeee: "+removedPiece,color,colorr)
       if(removedPiece==true && color==colorr)
       {   
 
