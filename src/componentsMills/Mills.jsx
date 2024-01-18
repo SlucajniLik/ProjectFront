@@ -1630,6 +1630,9 @@ function addRemoveLine(square,index,color,mode)
 <line className='boardLine'  x1={70} y1={50}  x2={90} y2={50}/>
 <line className='boardLine'  x1={50} y1={70}  x2={50} y2={90}/>
 <line className='boardLine'  x1={30} y1={50}  x2={10} y2={50}/>
+<text x="1" y="52" fontSize="6" fill="black">
+        1
+      </text>
 <Board position={10}  onClickCircle={onClickCircle}  />
 <Board position={20}  onClickCircle={onClickCircle}  />
 <Board position={30}  onClickCircle={onClickCircle}  />
