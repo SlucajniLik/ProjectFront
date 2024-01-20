@@ -1,7 +1,7 @@
 import  {useEffect, useState,useRef} from 'react'
 import '../css/Mills.css'
 import axios from 'axios'
-function Board({position,onClickCircle})
+function Board({position,onClickCircle,color,removedPiece,type})
 {
    const start=position
    const end=100-start
@@ -10,25 +10,26 @@ function Board({position,onClickCircle})
    return(
 <>
 
+
 <line className='boardLine'  x1={start} y1={start}  x2={end} y2={start}/>
 <line className='boardLine'  x1={end} y1={start}  x2={end} y2={end}/>
 <line className='boardLine'  x1={end} y1={end}  x2={start} y2={end}/>
 <line className='boardLine'  x1={start} y1={end}  x2={start} y2={start}/>
-<circle className='boardCircle'  onClick={()=>onClickCircle(square,0)}   cx={start} cy={start} r={0.5} />
-<circle className='boardCircle'  onClick={()=>onClickCircle(square,1)}  cx={50} cy={start} r={0.5} />
-<circle className='boardCircle'  onClick={()=>onClickCircle(square,2)}   cx={end} cy={start} r={0.5} />
-<circle className='boardCircle'  onClick={()=>onClickCircle(square,3)}     cx={end} cy={50} r={0.5} />
-<circle className='boardCircle'  onClick={()=>onClickCircle(square,4)}    cx={end} cy={end} r={0.5} />
-<circle className='boardCircle'  onClick={()=>onClickCircle(square,5)}    cx={50} cy={end} r={0.5} />
-<circle className='boardCircle'  onClick={()=>onClickCircle(square,6)}    cx={start} cy={end} r={0.5} />
-<circle className='boardCircle'  onClick={()=>onClickCircle(square,7)}      cx={start} cy={50} r={0.5} />
+<circle className='boardCircle'  onClick={()=>{type==1?onClickCircle(square,0):type==2 && (color=='white' || (color=='black' && removedPiece==true))?onClickCircle(square,0):undefined}}   cx={start} cy={start} r={0.5} />
+<circle className='boardCircle'  onClick={()=>{type==1?onClickCircle(square,1):type==2 && (color=='white' || (color=='black' && removedPiece==true))?onClickCircle(square,1):undefined}}  cx={50} cy={start} r={0.5} />
+<circle className='boardCircle'  onClick={()=>{type==1?onClickCircle(square,2):type==2 && (color=='white' || (color=='black' && removedPiece==true))?onClickCircle(square,2):undefined}}   cx={end} cy={start} r={0.5} />
+<circle className='boardCircle'  onClick={()=>{type==1?onClickCircle(square,3):type==2 && (color=='white' || (color=='black' && removedPiece==true))?onClickCircle(square,3):undefined}}     cx={end} cy={50} r={0.5} />
+<circle className='boardCircle'  onClick={()=>{type==1?onClickCircle(square,4):type==2 && (color=='white' || (color=='black' && removedPiece==true))?onClickCircle(square,4):undefined}}    cx={end} cy={end} r={0.5} />
+<circle className='boardCircle'  onClick={()=>{type==1?onClickCircle(square,5):type==2 && (color=='white' || (color=='black' && removedPiece==true))?onClickCircle(square,5):undefined}}    cx={50} cy={end} r={0.5} />
+<circle className='boardCircle'  onClick={()=>{type==1?onClickCircle(square,6):type==2 && (color=='white' || (color=='black' && removedPiece==true))?onClickCircle(square,6):undefined}}    cx={start} cy={end} r={0.5} />
+<circle className='boardCircle'  onClick={()=>{type==1?onClickCircle(square,7):type==2 && (color=='white' || (color=='black' && removedPiece==true))?onClickCircle(square,7):undefined}}      cx={start} cy={50} r={0.5} />
 
 </>
    )
 
 }
 
-function Piece({square,index,color,colorStroke,selectedPiece,onClickPiece})
+function Piece({square,index,color,colorStroke,selectedPiece,onClickPiece,removedPiece,type})
 {
 
 let x=0
@@ -85,7 +86,7 @@ else if(index===7)
 }
 
 return (
-    <circle cx={x} cy={y} r={3} fill={color}  stroke={selectedPiece?colorStroke:'transparent'}   onClick={()=>onClickPiece(square,index,color)}   />
+    <circle cx={x} cy={y} r={3} fill={color}  stroke={selectedPiece?colorStroke:'transparent'}   onClick={()=>{type==1?onClickPiece(square,index,color):type==2 && (color=='white' || (color=='black' && removedPiece==true))?onClickPiece(square,index,color):undefined}}   />
 )
 }
 
@@ -129,6 +130,178 @@ export default function Mills({type,dificulity})
 const [movePiece, setMovePiece] = useState(null);
 const [removePiece, setRemovePiece] = useState(null);
 const [removeTempPiece, setRemoveTempPiece] = useState(null);
+const [listMoves, setListMoves] = useState([]);
+
+
+
+
+
+useEffect(() => {
+  // This effect runs after the component has mounted
+
+  // Apply styles or do other tasks here
+  const pieces =JSON.parse(localStorage.getItem('pieces')) 
+  const moves =JSON.parse(localStorage.getItem('moves')) 
+
+  if(pieces!=null && moves!=null)
+  {
+   
+
+    setPices(pieces)
+    setListMoves(moves)
+  }
+ 
+}, []);
+
+
+
+
+
+
+
+
+
+
+
+
+function printMoves(square,index)
+{
+    if(square==0)
+    {
+      if(index==0)
+      {
+        return "A1"
+      }
+      if(index==1)
+      {
+        return "D1"
+      }
+      if(index==2)
+      {
+        return "G1"
+      }
+      if(index==3)
+      {
+        return "G4"
+      }
+      if(index==4)
+      {
+        return "G7"
+      }
+      if(index==5)
+      {
+        return "D7"
+      }
+      if(index==6)
+      {
+        return "A7"
+      }
+      if(index==7)
+      {
+        return "A4"
+      }
+
+    }
+   
+    if(square==1)
+    {
+      if(index==0)
+      {
+        return "B2"
+      }
+      if(index==1)
+      {
+        return "D2"
+      }
+      if(index==2)
+      {
+        return "F2"
+      }
+      if(index==3)
+      {
+        return "F4"
+      }
+      if(index==4)
+      {
+        return "F6"
+      }
+      if(index==5)
+      {
+        return "D6"
+      }
+      if(index==6)
+      {
+        return "B6"
+      }
+      if(index==7)
+      {
+        return "B4"
+      }
+     
+
+    }
+
+    if(square==2)
+    {
+      if(index==0)
+      {
+        return "C3"
+      }
+      if(index==1)
+      {
+        return "D3"
+      }
+      if(index==2)
+      {
+        return "E3"
+      }
+      if(index==3)
+      {
+        return "E4"
+      }
+      if(index==4)
+      {
+        return "E5"
+      }
+      if(index==5)
+      {
+        return "D5"
+      }
+      if(index==6)
+      {
+        return "C5"
+      }
+      if(index==7)
+      {
+        return "C4"
+      }
+
+    }
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function play(move,moveRem)
 {
 
@@ -866,6 +1039,7 @@ if(whiteRemain==3 && selectedPiece.color=="white")
 
     setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
     setPices(p=>[...p,{square,index,color}])
+    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)])
     changeColor()
     setSelectedPiece(null)
    
@@ -885,6 +1059,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
 
     setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
     setPices(p=>[...p,{square,index,color}])
+    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)])
     changeColor()
     setSelectedPiece(null)
    
@@ -906,6 +1081,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
            
         setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
         setPices(p=>[...p,{square,index,color}])
+        setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)])
         changeColor()
         setSelectedPiece(null)
 
@@ -932,6 +1108,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
     if(color=="white")
     {
      setPices(p=>[...p,{square,index,color}])
+     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)])
      addRemoveLine(square,index,color,1)
      setCountWhite(countWhite-1)
     // console.log("Whiteeee:: "+color)
@@ -942,6 +1119,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
     if(color=="black")
     {
      setPices(p=>[...p,{square,index,color}])
+     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)])
      addRemoveLine(square,index,color,1)
      setCountBlack(countBlack-1)
      //console.log("Black:: "+color)
@@ -975,6 +1153,7 @@ console.log("RemovedPies unutar clickPieceeeeeeeeeeeeeeeeeee: "+removedPiece,col
         if(addRemoveLine(square,index,colorr,3)==false )
         {
             setPices(pieces.filter(pi=>pi.square!==square || pi.index !== index || pi.color!==colorr))
+            setListMoves(l=>[...l,+color=='white'?'black':'white'+" je uklonio "+printMoves(square,index)])
             setRemovedPiece(false)
             myInputRef.current=false
 
@@ -990,6 +1169,8 @@ console.log("RemovedPies unutar clickPieceeeeeeeeeeeeeeeeeee: "+removedPiece,col
             }      
  
          setPices(pieces.filter(pi=>pi.square!==square || pi.index !== index || pi.color!==colorr))
+         setListMoves(l=>[...l,+color=='white'?'black':'white'+" je uklonio "+printMoves(square,index)])
+
         setRemovedPiece(false)
         myInputRef.current=false
 
@@ -1584,72 +1765,77 @@ function addRemoveLine(square,index,color,mode)
 
 
 
+function saveGame()
+{
+
+localStorage.setItem('pieces',JSON.stringify(pieces))
+localStorage.setItem('moves',JSON.stringify(listMoves))
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
     return(
-        <>
+      <>  
+        <div style={{display:'flex',justifyContent:"space-between",width:'1200px'}}>
+          <div>
+
+<h3>Beli:{countWhite}</h3>
+<h3>Crni:{countBlack}</h3>
+<h3> Broj belih na tabli:{pieces.filter(s => s.color === 'white').length}</h3>
+<h3>Broj crnih na tabli:{pieces.filter(s => s.color === 'black').length}</h3>
+</div>
+  
 <svg viewBox='0 0 100 100'>
+
+<text x="4" y="12" fontSize="4" fontWeight="bold" fill="black">1</text>
+<text x="4" y="22" fontSize="4" fontWeight="bold" fill="black">2</text>
+<text x="4" y="32" fontSize="4" fontWeight="bold" fill="black">3</text>
+<text x="4" y="52" fontSize="4" fontWeight="bold" fill="black">4</text>
+<text x="4" y="72" fontSize="4" fontWeight="bold" fill="black">5</text>
+<text x="4" y="82" fontSize="4" fontWeight="bold" fill="black">6</text>
+<text x="4" y="92" fontSize="4" fontWeight="bold" fill="black">7</text>
+
+
+<text x="8" y="96.5" fontSize="4" fontWeight="bold" fill="black">A</text>
+<text x="18" y="96.5" fontSize="4" fontWeight="bold" fill="black">B</text>
+<text x="28" y="96.5" fontSize="4" fontWeight="bold" fill="black">C</text>
+<text x="48" y="96.5" fontSize="4" fontWeight="bold" fill="black">D</text>
+<text x="68" y="96.5" fontSize="4" fontWeight="bold" fill="black">E</text>
+<text x="78" y="96.5" fontSize="4" fontWeight="bold" fill="black">F</text>
+<text x="88" y="96.5" fontSize="4" fontWeight="bold" fill="black">G</text>
+
 
 <line className='boardLine'  x1={50} y1={10}  x2={50} y2={30}/>
 <line className='boardLine'  x1={70} y1={50}  x2={90} y2={50}/>
 <line className='boardLine'  x1={50} y1={70}  x2={50} y2={90}/>
 <line className='boardLine'  x1={30} y1={50}  x2={10} y2={50}/>
-<text x="1" y="52" fontSize="6" fill="black">
-        1
-      </text>
-<Board position={10}  onClickCircle={onClickCircle}  />
-<Board position={20}  onClickCircle={onClickCircle}  />
-<Board position={30}  onClickCircle={onClickCircle}  />
+
+<Board position={10}  onClickCircle={onClickCircle}  color={color}  removedPiece={removedPiece} type={type}  />
+<Board position={20}  onClickCircle={onClickCircle} color={color}  removedPiece={removedPiece} type={type} />
+<Board position={30}  onClickCircle={onClickCircle}  color={color}  removedPiece={removedPiece} type={type} />
 
 
 
 {/*pieces.map(({square,index,color})=>{ <Piece key={`${square}-${index}-${color}`} square={square}index={index} color={color} />   })*/}
 { lines.map(({x1,y1,x2,y2,color})=><line key={x1+"-"+y1+"-"+x2+"-"+y2+"-"+"-"+color} style={{ stroke:color=='white'?'black':'white', strokeWidth: 0.5}} x1={x1} y1={y1} x2={x2} y2={y2} />)    }  
-{pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  colorStroke={validPieceColor}    selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index && selectedPiece?.color==color?true:false}                        onClickPiece={onClickPiece} />)}
+{pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  colorStroke={validPieceColor}    selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index && selectedPiece?.color==color?true:false}  onClickPiece={onClickPiece}    removedPiece={removedPiece} type={type}  />)}
  
 </svg>
+
 <div>
-<h3>Winner:{winner}</h3>
-<h3>Current player:{color}</h3>  
-<h3>White remaining:{countWhite}</h3>
-<h3>Black remaining:{countBlack}</h3>
+<button  onClick={()=>saveGame()} >Sacuvaj igru</button>
+  <h2>Potezi</h2>
+  {<ul>
+        {listMoves.map((obj, index) => (
+          <li key={index}>{obj}</li>
+        ))}
+      </ul>}
 </div>
+</div>
+<h3>Winner:{winner}</h3>
+<h3>Current player:{removedPiece==false?color:color=='white'?'black':'white'}</h3>  
 
 </>
     )
