@@ -18,7 +18,8 @@ const [error,setError]=useState(null)
 const [games,setGames]=useState(0)
 const [type, setType] = useState(null);
 const [dificulity, setDificulity] = useState(null);
-
+const [dif, setDif] = useState(null);
+const [typeStep, setTypeStep] = useState(null);
 
 useEffect(
 ()=>{
@@ -46,6 +47,20 @@ effect()
 
 },[])
 
+
+useEffect(() => {
+  // This effect runs after the component has mounted
+
+  // Apply styles or do other tasks here
+
+  
+    let  locdif=JSON.parse(localStorage.getItem('dificulity'))
+    console.log(locdif+" aaaaaaa")
+   setDif(locdif)
+  
+
+}, [type]);
+
 if(loading)
 {
   return <h1>Loading</h1>
@@ -69,7 +84,27 @@ if (games === 1 && type === null) {
   );
 }
 
-if (games === 1 && type === 2 && dificulity==null) {
+
+if(games === 1 && dif!=null && type === 2)
+{
+ 
+  return (
+    
+    <div>
+      <h1>Izaberite opciju</h1>
+  
+      <button onClick={() => loadGame()}>Nastavi igru</button>
+      <button onClick={() => setNewGame()}>Nova igra</button>
+    </div>
+  );
+
+}
+
+
+
+
+
+if (games === 1 && type === 2 && dificulity==null ) {
   return (
     
     <div>
@@ -80,6 +115,23 @@ if (games === 1 && type === 2 && dificulity==null) {
     </div>
   );
 }
+
+
+if (games === 1 && type === 3 && typeStep==null) {
+  return (
+    
+    <div>
+      <h1>Izaberite opciju</h1>
+      <button onClick={() => setTypeStep(1)}>Automatski</button>
+      <button onClick={() => setTypeStep(2)}>Korak po korak</button>
+      
+    </div>
+  );
+}
+
+
+
+
 if (games === 1 && type === 3 && dificulity==null) {
   return (
     
@@ -92,6 +144,25 @@ if (games === 1 && type === 3 && dificulity==null) {
   );
 }
 
+
+function setNewGame()
+{
+
+localStorage.removeItem('pieces')
+localStorage.removeItem('moves')
+localStorage.removeItem('dificulity')
+console.log(dificulity+"  fff "+games+"   dd  "+type+"   pp")
+setDificulity(null)
+setDif(null)
+}
+
+function loadGame()
+{
+const locdif=JSON.parse(localStorage.getItem('dificulity'))
+setDificulity(locdif)
+console.log(locdif+"lll")
+setDif(null)
+}
 
 
 
@@ -113,9 +184,13 @@ if (games === 1 && type === 3 && dificulity==null) {
   <div>
   <button  onClick={()=>{setGames(0)
   setType(null)
+  setDificulity(null)
+  setTypeStep(null)
   }}>Pytnik</button>
 <button  onClick={()=>{setGames(1)
 setType(null)
+setDificulity(null)
+setTypeStep(null)
 }}>Mills</button>
 
 
@@ -130,7 +205,13 @@ setType(null)
 
 
 { /* games==1 && <Mills/>*/}
-{games === 1 && type !== null  && dificulity!=null && <Mills type={type} dificulity={dificulity} />}
+{/*games === 1 && type !== null  && dificulity!=null && <Mills type={type} dificulity={dificulity} />*/}
+
+
+
+{games === 1 && type==1 &&  <Mills type={type} dificulity={0}   typeStep={0}  />}
+{games === 1 && type ==2  && dificulity!=null && <Mills type={type} dificulity={dificulity}  typeStep={0}  />}
+{games === 1 && type ==3  && dificulity!=null && <Mills type={type} dificulity={dificulity} typeStep={typeStep} />}
 
    </>
   )

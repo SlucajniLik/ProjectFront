@@ -98,7 +98,7 @@ return (
 
 
 
-export default function Mills({type,dificulity})
+export default function Mills({type,dificulity,typeStep})
 {
 
   console.log(type+"    ffff")
@@ -132,6 +132,142 @@ const [removePiece, setRemovePiece] = useState(null);
 const [removeTempPiece, setRemoveTempPiece] = useState(null);
 const [listMoves, setListMoves] = useState([]);
 
+const score=useRef(null)
+///////
+
+const [stepInd,setStepInd]=useState(true)
+///////
+const [backPieces, setBackPieces] = useState([]);
+const [backMoves, setBackMoves] = useState([]);
+const [prevColor, setPrevColor] = useState([]);
+const [prevRemPiece,setPrevRemPiece]=useState([])
+const [prevCountWhite, setPrevCountWhite] = useState([]);
+const [prevCountBlack, setPrevCountBlack] = useState([]);
+const [prevRemainWhite, setPrevRemainWhite] = useState([]);
+const [prevRemainBlack, setPrevRemainBlack] = useState([]);
+const [prevLines,setPrevLines] = useState([]);
+const [prevSelectedPiece,setPrevSelectedPiece] = useState([]);
+const [prevSquare,setPrevSquare]=useState([])
+const [prevIndex,setPrevIndex]=useState([])
+const [prevColor2,setPrevColor2]=useState([])
+const[prevValidPieceColor,setPrevValidPieceColor]=useState([])
+
+
+
+useEffect(()=>
+{
+    
+ 
+    document.body.addEventListener('keydown',stepByStep);
+   
+    
+    return ()=>{document.body.removeEventListener('keydown',stepByStep)
+
+ };
+}
+,[color,removedPiece,backMoves,backPieces])
+
+
+const stepByStep=(e)=>
+{
+if(typeStep==2)
+{
+
+if(e.keyCode==39)
+{
+ 
+  
+  if(stepInd==true)
+  { 
+  
+  setStepInd(false)
+
+
+ setBackPieces(prev=>[...prev,pieces])
+ setBackMoves(prev=>[...prev,listMoves])
+ setPrevColor(prev=>[...prev,color])
+ setPrevRemPiece(prev=>[...prev,removedPiece])
+setPrevCountWhite(prev=>[...prev,countWhite])
+setPrevCountBlack(prev=>[...prev,countBlack])
+setPrevLines(prev=>[...prev,lines])
+setPrevSelectedPiece(prev=>[...prev,selectedPiece])
+setPrevSquare(prev=>[...prev,square])
+setPrevIndex(prev=>[...prev,index])
+setPrevColor2(prev=>[...prev,color2])
+setPrevValidPieceColor(prev=>[...prev,validPieceColor])
+
+  const game=transformToMatrix()
+  console.log('pocetna matrica'+JSON.stringify(game))
+  console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPP")
+    axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
+     
+       res=>{
+         console.log("Ovo je potez:"+res.data.move)
+
+        play(res.data.move[0],res.data.move[1])
+        score.current=res.data.score
+       
+        setStepInd(true)
+       
+       
+       }
+     
+    )
+}
+}
+else if(e.keyCode==37)
+{
+if(stepInd==true)
+{ 
+ if(backPieces.length>0)
+ {  
+setPices(backPieces[backPieces.length-1])
+setListMoves(backMoves[backMoves.length-1])
+setColor(prevColor[prevColor.length-1])
+setRemovedPiece(prevRemPiece[prevRemPiece.length-1])
+setCountWhite(prevCountWhite[prevCountWhite.length-1])
+setCountBlack(prevCountBlack[prevCountBlack.length-1])
+setSelectedPiece(prevSelectedPiece[prevSelectedPiece.length-1])
+setLines(prevLines[prevLines.length-1])
+setSquare(prevSquare[prevSquare.length-1])
+setIndex(prevIndex[prevIndex.length-1])
+setColor2(prevColor2[prevColor2.length-1])
+setValidPieceColor(prevValidPieceColor[prevValidPieceColor.length-1])
+console.log("  BACKKKKKK "+backPieces[backPieces.length-1])
+backPieces.pop()
+backMoves.pop()
+prevColor.pop()
+prevRemPiece.pop()
+prevCountWhite.pop()
+prevCountBlack.pop()
+prevLines.pop()
+prevSelectedPiece.pop()
+prevSquare.pop()
+prevIndex.pop()
+prevColor2.pop()
+prevValidPieceColor.pop()
+}
+}
+
+
+}
+
+
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -140,6 +276,8 @@ useEffect(() => {
   // This effect runs after the component has mounted
 
   // Apply styles or do other tasks here
+  if(type==2)
+  {
   const pieces =JSON.parse(localStorage.getItem('pieces')) 
   const moves =JSON.parse(localStorage.getItem('moves')) 
 
@@ -150,7 +288,7 @@ useEffect(() => {
     setPices(pieces)
     setListMoves(moves)
   }
- 
+}
 }, []);
 
 
@@ -433,6 +571,13 @@ useEffect(() => {
         return;
       }
   
+if(typeStep==2)
+{
+  return
+}
+
+
+
       if(gameOver){return}
     if(removePiece){return}
     if (movePiece){return}
@@ -462,6 +607,8 @@ useEffect(() => {
             console.log("Ovo je potez:"+res.data.move)
   
            play(res.data.move[0],res.data.move[1])
+           
+           score.current=res.data.score
           
           
           }
@@ -553,6 +700,12 @@ useEffect(() => {
       {
         return
       }
+
+      if(typeStep==2)
+      {
+          return
+      }
+
   if(gameOver){return}
     if(removePiece){return}
     if (movePiece){return}
@@ -582,6 +735,7 @@ useEffect(() => {
             console.log("Ovo je potez:"+res.data.move)
   
            play(res.data.move[0],res.data.move[1])
+           score.current=res.data.score
           
           
           }
@@ -1039,7 +1193,7 @@ if(whiteRemain==3 && selectedPiece.color=="white")
 
     setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
     setPices(p=>[...p,{square,index,color}])
-    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)])
+    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)+"s "+score.current])
     changeColor()
     setSelectedPiece(null)
    
@@ -1059,7 +1213,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
 
     setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
     setPices(p=>[...p,{square,index,color}])
-    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)])
+    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)+"s "+score.current])
     changeColor()
     setSelectedPiece(null)
    
@@ -1081,7 +1235,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
            
         setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
         setPices(p=>[...p,{square,index,color}])
-        setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)])
+        setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)+"s "+score.current])
         changeColor()
         setSelectedPiece(null)
 
@@ -1108,7 +1262,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
     if(color=="white")
     {
      setPices(p=>[...p,{square,index,color}])
-     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)])
+     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)+"s "+score.current])
      addRemoveLine(square,index,color,1)
      setCountWhite(countWhite-1)
     // console.log("Whiteeee:: "+color)
@@ -1119,7 +1273,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
     if(color=="black")
     {
      setPices(p=>[...p,{square,index,color}])
-     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)])
+     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)+"s "+score.current])
      addRemoveLine(square,index,color,1)
      setCountBlack(countBlack-1)
      //console.log("Black:: "+color)
@@ -1770,6 +1924,7 @@ function saveGame()
 
 localStorage.setItem('pieces',JSON.stringify(pieces))
 localStorage.setItem('moves',JSON.stringify(listMoves))
+localStorage.setItem('dificulity',dificulity)
 
 
 
@@ -1785,6 +1940,9 @@ localStorage.setItem('moves',JSON.stringify(listMoves))
 <h3>Crni:{countBlack}</h3>
 <h3> Broj belih na tabli:{pieces.filter(s => s.color === 'white').length}</h3>
 <h3>Broj crnih na tabli:{pieces.filter(s => s.color === 'black').length}</h3>
+<h3>Winner:{winner}</h3>
+<h3>Current player:{removedPiece==false?color:color=='white'?'black':'white'}</h3>  
+
 </div>
   
 <svg viewBox='0 0 100 100'>
@@ -1823,9 +1981,8 @@ localStorage.setItem('moves',JSON.stringify(listMoves))
 {pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  colorStroke={validPieceColor}    selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index && selectedPiece?.color==color?true:false}  onClickPiece={onClickPiece}    removedPiece={removedPiece} type={type}  />)}
  
 </svg>
-
 <div>
-<button  onClick={()=>saveGame()} >Sacuvaj igru</button>
+{type==2 && <button  onClick={()=>saveGame()} >Sacuvaj igru</button>}
   <h2>Potezi</h2>
   {<ul>
         {listMoves.map((obj, index) => (
@@ -1834,8 +1991,6 @@ localStorage.setItem('moves',JSON.stringify(listMoves))
       </ul>}
 </div>
 </div>
-<h3>Winner:{winner}</h3>
-<h3>Current player:{removedPiece==false?color:color=='white'?'black':'white'}</h3>  
 
 </>
     )
