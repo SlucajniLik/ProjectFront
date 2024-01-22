@@ -30,7 +30,7 @@ const [pause,setPause]=useState(false)
 const [gameOver,setGameOver]=useState("")
 var graph;
 
-console.log("Da li se ponovo renderujem")
+
 
 const [collected, setCollected] = useState(new Array(map.length).fill(false));
 var tmIdArr=[]
@@ -85,7 +85,7 @@ function createMatrixFromExisting(existingMatrix) {
   for (let i = 0; i < rows; i++) {
     newMatrix[i] = [];
     for (let j = 0; j < cols; j++) {
-      // Copy the value from the existing matrix to the new matrix
+      
       if(existingMatrix[i][j+2]==null)
       {
         newMatrix[i][j]=0
@@ -106,7 +106,7 @@ function createMatrixFromExisting(existingMatrix) {
 
  for (let i = 0; i < newMatrix.length; i++) {
     for (let j = 0; j < newMatrix[newMatrix.length-1].length; j++) {
-      // Copy the value from the existing matrix to the new matrix
+      
       if(newMatrix[i][j]!=0)
       {
         newMatrix[j][i]=newMatrix[i][j]
@@ -125,7 +125,7 @@ function step(){
 
   graph=createMatrixFromExisting(map)
 
-console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+currrentStep)
+
 
  setStepsTaken(stepsTaken=>[...stepsTaken,{id:currentStepRef.current,from:path[currentStepRef.current],to:path[currentStepRef.current+1],price:graph[path[currentStepRef.current]][path[currentStepRef.current+1]]}])
  setCollected((prevCollected) => {
@@ -164,7 +164,7 @@ setCollected((prevCollected) => {
   const currentStepRef = useRef(currrentStep);
 
   useEffect(() => {
-    console.log(currrentStep+" aaaaaaaaaaaasasasas")
+    
     currentStepRef.current = currrentStep;
 
 

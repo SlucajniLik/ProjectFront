@@ -101,13 +101,9 @@ return (
 export default function Mills({type,dificulity,typeStep})
 {
 
-  console.log(type+"    ffff")
+  
 
     const[pieces,setPices]=useState([])
-  /* const[pieces,setPices]=useState([
-    {square:0,index:0,color:'white'},
-    {square:1,index:0,color:'black'},
-   ])*/
    const[lines,setLines]=useState([])
    const[countWhite,setCountWhite]=useState(9)
    const[countBlack,setCountBlack]=useState(9)
@@ -152,7 +148,9 @@ const [prevIndex,setPrevIndex]=useState([])
 const [prevColor2,setPrevColor2]=useState([])
 const[prevValidPieceColor,setPrevValidPieceColor]=useState([])
 
-
+const [prevRemoveTempPiece, setPrevRemoveTempPiece] = useState([]);
+const [prevWinner,sepPrevWinner]=useState([])
+const [prevGameOver,setPrevGameOver]=useState([])
 
 useEffect(()=>
 {
@@ -196,6 +194,9 @@ setPrevIndex(prev=>[...prev,index])
 setPrevColor2(prev=>[...prev,color2])
 setPrevValidPieceColor(prev=>[...prev,validPieceColor])
 
+setPrevRemoveTempPiece(prev=>[...prev,removeTempPiece])
+sepPrevWinner(prev=>[...prev,winner])
+setPrevGameOver(prev=>[...prev,gameOver])
   const game=transformToMatrix()
   console.log('pocetna matrica'+JSON.stringify(game))
   console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPP")
@@ -233,7 +234,14 @@ setSquare(prevSquare[prevSquare.length-1])
 setIndex(prevIndex[prevIndex.length-1])
 setColor2(prevColor2[prevColor2.length-1])
 setValidPieceColor(prevValidPieceColor[prevValidPieceColor.length-1])
-console.log("  BACKKKKKK "+backPieces[backPieces.length-1])
+
+
+
+setRemoveTempPiece(prevRemoveTempPiece[prevRemoveTempPiece.length-1])
+setWinner(prevWinner[prevWinner.length-1])
+setgameOver(prevGameOver[prevGameOver.length-1])
+
+
 backPieces.pop()
 backMoves.pop()
 prevColor.pop()
@@ -246,6 +254,9 @@ prevSquare.pop()
 prevIndex.pop()
 prevColor2.pop()
 prevValidPieceColor.pop()
+prevRemoveTempPiece.pop()
+prevGameOver.pop()
+prevWinner.pop()
 }
 }
 
@@ -443,7 +454,7 @@ function printMoves(square,index)
 function play(move,moveRem)
 {
 
-  console.log(moveRem+"   iiiiiiiiiiiiiiiiiiiiiiiii")
+  
 
 
 
@@ -523,7 +534,7 @@ useEffect(() => {
 
  
     onClickCircle(movePiece.square, movePiece.index);
-    console.log(JSON.stringify(movePiece.removedPi)+" oooooooooooooooooooooooooooooooooooooo777")
+    
     if(movePiece.removedPi)
     {
       
@@ -536,7 +547,7 @@ useEffect(() => {
 
 
 
-  console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+
 
 }, [movePiece])
 
@@ -551,7 +562,7 @@ useEffect(() => {
 
   if (removePiece)
   {  
-    console.log(removePiece.square,removePiece.index,removePiece.color=='white'?'black':'white'+'   LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+   
      onClickPiece(removePiece.square,removePiece.index,removePiece.color=='white'?'black':'white')
      //setRemovedPiece(false)
   }
@@ -600,7 +611,7 @@ if(typeStep==2)
   
      const game=transformToMatrix()
      console.log('pocetna matrica'+JSON.stringify(game))
-     console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPP")
+    
        axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
         
           res=>{
@@ -619,7 +630,7 @@ if(typeStep==2)
   
        console.log(transformToMatrix())
   
-  console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
+  
     
     },[color,removedPiece])
 /////////////////////////////////////////////////////////////////////////////////////////////////////////white
@@ -646,7 +657,7 @@ useEffect(() => {
 
  
     onClickCircle(movePiece.square, movePiece.index);
-    console.log(JSON.stringify(movePiece.removedPi)+" oooooooooooooooooooooooooooooooooooooo777")
+  
     if(movePiece.removedPi)
     {
       
@@ -659,7 +670,7 @@ useEffect(() => {
 
 
 
-  console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL')
+  
 
 }, [movePiece])
 
@@ -728,7 +739,7 @@ useEffect(() => {
   
      const game=transformToMatrix()
      console.log('pocetna matrica'+JSON.stringify(game))
-     console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPP")
+    
        axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
         
           res=>{
@@ -746,7 +757,7 @@ useEffect(() => {
   
        console.log(transformToMatrix())
   
-  console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU')
+  
     
     },[color,removedPiece])
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -909,7 +920,7 @@ function isValidPiece(square1, index1,color)
     const prevPiece=pieces.find(pi=>pi.square==square1 && pi.index==prev)
     const nextPiece=pieces.find(pi=>pi.square==square1 && pi.index==next)
 
-//console.log(index1,square1,JSON.stringify(prevPiece),JSON.stringify(nextPiece))
+
 
 
 
@@ -1117,7 +1128,7 @@ for(let i=0;i<remainPices.length;i++)
   if(isValidPiece(remainPices[i].square,remainPices[i].index,remainPices[i].color)==true)
   {
 
-   // console.log(" ODGOVOR:   "+remainPices[i].square,remainPices[i].index,remainPices[i].color)
+  
      checkPiece=true
      break;
   }
@@ -1126,14 +1137,14 @@ for(let i=0;i<remainPices.length;i++)
 if(checkPiece==false)
 {
   setgameOver(true)
-  //console.log(colWin+"  je pobedio  u nerasporedu"+checkPiece)
+ 
   setWinner(colWin)
 }
 
 }
 
 
-console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD')
+
   }, [lines,square,index,color2,countWhite,countBlack,gameOver,pieces,validPieceColor,winner,removePiece,removeTempPiece]);
 
 
@@ -1193,7 +1204,7 @@ if(whiteRemain==3 && selectedPiece.color=="white")
 
     setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
     setPices(p=>[...p,{square,index,color}])
-    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)+"s "+score.current])
+    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+" na mesto "+printMoves(square,index)+" rez: "+score.current])
     changeColor()
     setSelectedPiece(null)
    
@@ -1213,7 +1224,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
 
     setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
     setPices(p=>[...p,{square,index,color}])
-    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)+"s "+score.current])
+    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+" na mesto "+printMoves(square,index)+" rez: "+score.current])
     changeColor()
     setSelectedPiece(null)
    
@@ -1235,7 +1246,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
            
         setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
         setPices(p=>[...p,{square,index,color}])
-        setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+"  na mesto"+printMoves(square,index)+"s "+score.current])
+        setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+" na mesto "+printMoves(square,index)+" rez: "+score.current])
         changeColor()
         setSelectedPiece(null)
 
@@ -1262,7 +1273,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
     if(color=="white")
     {
      setPices(p=>[...p,{square,index,color}])
-     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)+"s "+score.current])
+     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)+" rez: "+score.current])
      addRemoveLine(square,index,color,1)
      setCountWhite(countWhite-1)
     // console.log("Whiteeee:: "+color)
@@ -1273,7 +1284,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
     if(color=="black")
     {
      setPices(p=>[...p,{square,index,color}])
-     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)+"s "+score.current])
+     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)+" rez: "+score.current])
      addRemoveLine(square,index,color,1)
      setCountBlack(countBlack-1)
      //console.log("Black:: "+color)
@@ -1299,7 +1310,7 @@ if(gameOver==true)
     return;
 }
 
-console.log("RemovedPies unutar clickPieceeeeeeeeeeeeeeeeeee: "+removedPiece,color,colorr)
+
       if(removedPiece==true && color==colorr)
       {   
 
@@ -1307,7 +1318,7 @@ console.log("RemovedPies unutar clickPieceeeeeeeeeeeeeeeeeee: "+removedPiece,col
         if(addRemoveLine(square,index,colorr,3)==false )
         {
             setPices(pieces.filter(pi=>pi.square!==square || pi.index !== index || pi.color!==colorr))
-            setListMoves(l=>[...l,+color=='white'?'black':'white'+" je uklonio "+printMoves(square,index)])
+            setListMoves(l=>[...l,+color+" je uklonjen "+printMoves(square,index)])
             setRemovedPiece(false)
             myInputRef.current=false
 
@@ -1323,7 +1334,7 @@ console.log("RemovedPies unutar clickPieceeeeeeeeeeeeeeeeeee: "+removedPiece,col
             }      
  
          setPices(pieces.filter(pi=>pi.square!==square || pi.index !== index || pi.color!==colorr))
-         setListMoves(l=>[...l,+color=='white'?'black':'white'+" je uklonio "+printMoves(square,index)])
+         setListMoves(l=>[...l,+color+" je uklonjen "+printMoves(square,index)])
 
         setRemovedPiece(false)
         myInputRef.current=false
@@ -1797,7 +1808,7 @@ function addRemoveLine(square,index,color,mode)
                {
 
 
-               // console.log("PREVIOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS2:  "+x1,y1,x2,y2,color)
+             
                setLines((l)=>[...l,{x1,y1,x2,y2,color:color}])
                setRemovedPiece(true)
                myInputRef.current=true
@@ -1884,7 +1895,7 @@ function addRemoveLine(square,index,color,mode)
                if(tr==undefined)
                {
 
-               // console.log("NEXTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT:  "+x1,y1,x2,y2,color)
+              
                 setLines(l=>[...l,{x1,y1,x2,y2,color:color}])
                 setRemovedPiece(true)
                 myInputRef.current=true
@@ -1976,7 +1987,6 @@ localStorage.setItem('dificulity',dificulity)
 
 
 
-{/*pieces.map(({square,index,color})=>{ <Piece key={`${square}-${index}-${color}`} square={square}index={index} color={color} />   })*/}
 { lines.map(({x1,y1,x2,y2,color})=><line key={x1+"-"+y1+"-"+x2+"-"+y2+"-"+"-"+color} style={{ stroke:color=='white'?'black':'white', strokeWidth: 0.5}} x1={x1} y1={y1} x2={x2} y2={y2} />)    }  
 {pieces.map(({square,index,color})=> <Piece key={square+"-"+index+"-"+color} square={square} index={index} color={color}  colorStroke={validPieceColor}    selectedPiece={selectedPiece?.square==square && selectedPiece?.index==index && selectedPiece?.color==color?true:false}  onClickPiece={onClickPiece}    removedPiece={removedPiece} type={type}  />)}
  
