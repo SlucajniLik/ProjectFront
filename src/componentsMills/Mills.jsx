@@ -1,6 +1,7 @@
 import  {useEffect, useState,useRef} from 'react'
 import '../css/Mills.css'
 import axios from 'axios'
+////////////////////////////
 function Board({position,onClickCircle,color,removedPiece,type})
 {
    const start=position
@@ -615,12 +616,14 @@ if(typeStep==2)
        axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
         
           res=>{
-            console.log("Ovo je potez:"+res.data.move)
-  
+            
+            if(res.data.move[0]!=null)
+            {
+              console.log("Ovo je potez:"+res.data.move)
            play(res.data.move[0],res.data.move[1])
            
            score.current=res.data.score
-          
+            }
           
           }
         
@@ -743,10 +746,13 @@ useEffect(() => {
        axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
         
           res=>{
-            console.log("Ovo je potez:"+res.data.move)
-  
+            
+            if(res.data.move[0]!=null)
+            { 
+              console.log("Ovo je potez:"+res.data.move)
            play(res.data.move[0],res.data.move[1])
            score.current=res.data.score
+            }
           
           
           }
@@ -831,7 +837,6 @@ const information={
 
   data:data,
   currentPlayer:removedPiece==false?color === 'white' ? 1 : -1:color === 'white' ? -1 : 1,
-  isMills:removedPiece,
   hardness:dificulity
 }
   return information
@@ -1204,7 +1209,7 @@ if(whiteRemain==3 && selectedPiece.color=="white")
 
     setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
     setPices(p=>[...p,{square,index,color}])
-    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+" na mesto "+printMoves(square,index)+" rez: "+score.current])
+    setListMoves(l=>[...l,(color=='white'?'Beli':'Crni')+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+" na mesto "+printMoves(square,index)+(type==3?" rez: "+score.current:'')])
     changeColor()
     setSelectedPiece(null)
    
@@ -1224,7 +1229,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
 
     setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
     setPices(p=>[...p,{square,index,color}])
-    setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+" na mesto "+printMoves(square,index)+" rez: "+score.current])
+    setListMoves(l=>[...l,(color=='white'?'Beli':'Crni')+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+" na mesto "+printMoves(square,index)+(type==3?" rez: "+score.current:'')])
     changeColor()
     setSelectedPiece(null)
    
@@ -1246,7 +1251,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
            
         setPices(pieces.filter(pi=>pi.square!==selectedPiece.square || pi.index !==selectedPiece.index || pi.color!==selectedPiece.color))
         setPices(p=>[...p,{square,index,color}])
-        setListMoves(l=>[...l,color+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+" na mesto "+printMoves(square,index)+" rez: "+score.current])
+        setListMoves(l=>[...l,(color=='white'?'Beli':'Crni')+" je pomerio "+ printMoves(selectedPiece.square,selectedPiece.index)+" na mesto "+printMoves(square,index)+(type==3?" rez: "+score.current:'')])
         changeColor()
         setSelectedPiece(null)
 
@@ -1273,7 +1278,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
     if(color=="white")
     {
      setPices(p=>[...p,{square,index,color}])
-     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)+" rez: "+score.current])
+     setListMoves(l=>[...l,(color=='white'?'Beli':'Crni')+" je setovao "+printMoves(square,index)+(type==3?" rez: "+score.current:'')])
      addRemoveLine(square,index,color,1)
      setCountWhite(countWhite-1)
     // console.log("Whiteeee:: "+color)
@@ -1284,7 +1289,7 @@ else if(blackRemain==3 && selectedPiece.color=="black")
     if(color=="black")
     {
      setPices(p=>[...p,{square,index,color}])
-     setListMoves(l=>[...l,color+" je setovao "+printMoves(square,index)+" rez: "+score.current])
+     setListMoves(l=>[...l,(color=='white'?'Beli':'Crni')+" je setovao "+printMoves(square,index)+(type==3?" rez: "+score.current:'')])
      addRemoveLine(square,index,color,1)
      setCountBlack(countBlack-1)
      //console.log("Black:: "+color)
@@ -1318,7 +1323,7 @@ if(gameOver==true)
         if(addRemoveLine(square,index,colorr,3)==false )
         {
             setPices(pieces.filter(pi=>pi.square!==square || pi.index !== index || pi.color!==colorr))
-            setListMoves(l=>[...l,+color+" je uklonjen "+printMoves(square,index)])
+            setListMoves(l=>[...l,(color=='white'?'Crni':'Beli')+" je uklonio "+printMoves(square,index)])
             setRemovedPiece(false)
             myInputRef.current=false
 
@@ -1334,7 +1339,7 @@ if(gameOver==true)
             }      
  
          setPices(pieces.filter(pi=>pi.square!==square || pi.index !== index || pi.color!==colorr))
-         setListMoves(l=>[...l,+color+" je uklonjen "+printMoves(square,index)])
+         setListMoves(l=>[...l,(color=='white'?'Crni':'Beli')+" je uklonio "+printMoves(square,index)])
 
         setRemovedPiece(false)
         myInputRef.current=false
@@ -1940,21 +1945,17 @@ localStorage.setItem('dificulity',dificulity)
 
 
 }
-
+useEffect(()=>
+{
+  document.documentElement.style.setProperty('--player',color)
+}
+,
+[color])
 
     return(
       <>  
         <div style={{display:'flex',justifyContent:"space-between",width:'1200px'}}>
-          <div>
 
-<h3>Beli:{countWhite}</h3>
-<h3>Crni:{countBlack}</h3>
-<h3> Broj belih na tabli:{pieces.filter(s => s.color === 'white').length}</h3>
-<h3>Broj crnih na tabli:{pieces.filter(s => s.color === 'black').length}</h3>
-<h3>Winner:{winner}</h3>
-<h3>Current player:{removedPiece==false?color:color=='white'?'black':'white'}</h3>  
-
-</div>
   
 <svg viewBox='0 0 100 100'>
 
@@ -1992,7 +1993,22 @@ localStorage.setItem('dificulity',dificulity)
  
 </svg>
 <div>
-{type==2 && <button  onClick={()=>saveGame()} >Sacuvaj igru</button>}
+{type==2 && <button  
+ onClick={()=>saveGame()} >Sacuvaj igru</button>}
+<div id="info" >
+<div className='info-row'>
+<h3>Beli:{countWhite}</h3>
+<h3>Crni:{countBlack}</h3>
+</div>
+<h3> Broj belih na tabli:{pieces.filter(s => s.color === 'white').length}</h3>
+<h3>Broj crnih na tabli:{pieces.filter(s => s.color === 'black').length}</h3>
+<div className='info-row'>
+<h3>Pobednik:{winner=='white'?'Beli':winner=='black'?'Crni':''}</h3>
+<h3>Trenutni igrac:{removedPiece==false?color=='white'?'Beli':'Crni':color=='white'?'Crni':'Beli'}</h3>  
+</div>
+</div>
+
+
   <h2>Potezi</h2>
   {<ul>
         {listMoves.map((obj, index) => (

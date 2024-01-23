@@ -4,6 +4,10 @@
   padding: 2rem;
   text-align: center;
 }
+body
+{
+  background-color: moccasin;
+}
 
 .logo {
   height: 6em;
@@ -58,3 +62,104 @@
   opacity: 0;
 }
 
+ul{
+width: 400px;
+height: 320px;
+list-style: none;
+background-color: moccasin;
+padding: 12px;
+margin: 20px;
+overflow-y: auto;
+overflow-x: hidden;
+}
+
+ul li{
+width: 40ch;
+text-align: start;
+background-color: white;
+padding: 12px;
+margin: 12px;
+border-radius: 6px;
+box-shadow:0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); ;
+
+}
+#info {
+width: 400px; ;
+background-color: moccasin;
+margin: 0 12px;
+display: flex;
+flex-direction: column;
+padding:12px;
+gap: 12px;
+}
+.info-row
+{
+display: flex;
+gap: 12px;
+justify-content: space-evenly;
+}
+
+.info-row h3
+{
+  flex: 1;
+}
+
+#info h3
+{
+margin: 0;
+background-color: white;
+padding: 12px;
+font-size: 1rem;
+border-radius: 6px;
+box-shadow:  0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);;
+}
+
+.btn-container
+{
+width: 200px;
+display: flex;
+margin:auto;
+margin: 12px auto;
+gap:6px;
+justify-content: center;
+}
+.btnCon
+{
+  display: flex;
+  justify-content: space-between;
+  width: 950px;
+}
+.btnCon button
+{width: 300px;}
+
+
+
+.btnCon2
+{
+  display: flex;
+  justify-content: space-between;
+  width: 950px;
+  
+}
+.btnCon2 button
+{width: 300px;}
+
+.btnCon3
+{
+  display: flex;
+  justify-content: space-between;
+  width: 650px;
+}
+.btnCon3 button
+{width: 300px;}
+
+
+.game-btn
+{
+  flex:1;
+}
+
+.active{
+  background-color:rgb(123, 63, 0); 
+  color: white;
+}

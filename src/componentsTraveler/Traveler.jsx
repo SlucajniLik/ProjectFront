@@ -350,7 +350,7 @@ return(
 
 <div id="container" >
 
-<div>
+<div   className='btn-container'>
 <button  onClick={()=>{
      
     setMap(maps[0])
@@ -373,7 +373,7 @@ return(
  }}   >Map 1</button>
 </div>
 
-<div>
+<div className='btn-container'>
 <button  onClick={()=>{setAgent("Aki") 
 setStepsTaken([])
 setCurrentStep(0) 

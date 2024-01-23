@@ -73,14 +73,16 @@ if(error)
 
 if (games === 1 && type === null) {
   return (
-    
-    <div>
-      <h1>Izaberite opciju</h1>
+    <> 
+    <h1>Izaberite opciju</h1>
+    <div  className='btnCon'>
+      
       <button onClick={() => {setType(1) 
         setDificulity(0)}}>Covek protiv coveka</button>
       <button onClick={() => setType(2)}>Covek protiv racunara</button>
       <button onClick={() => setType(3)}>Racunar protiv racunara</button>
     </div>
+    </>
   );
 }
 
@@ -89,13 +91,13 @@ if(games === 1 && dif!=null && type === 2)
 {
  
   return (
-    
-    <div>
-      <h1>Izaberite opciju</h1>
-  
+    <>  
+    <h1>Izaberite opciju</h1>
+    <div  className='btnCon3'>
       <button onClick={() => loadGame()}>Nastavi igru</button>
       <button onClick={() => setNewGame()}>Nova igra</button>
     </div>
+    </>
   );
 
 }
@@ -106,26 +108,27 @@ if(games === 1 && dif!=null && type === 2)
 
 if (games === 1 && type === 2 && dificulity==null ) {
   return (
-    
-    <div>
-      <h1>Izaberite opciju</h1>
+    <>  
+    <h1>Izaberite opciju</h1>
+    <div className='btnCon2'>
       <button onClick={() => setDificulity(1)}>Lako</button>
       <button onClick={() => setDificulity(2)}>Srednje</button>
       <button onClick={() => setDificulity(3)}>Tesko</button>
     </div>
+    </>
   );
 }
 
 
 if (games === 1 && type === 3 && typeStep==null) {
   return (
-    
-    <div>
-      <h1>Izaberite opciju</h1>
+    <>  
+    <h1>Izaberite opciju</h1>
+    <div  className='btnCon3'>
       <button onClick={() => setTypeStep(1)}>Automatski</button>
       <button onClick={() => setTypeStep(2)}>Korak po korak</button>
-      
     </div>
+    </>
   );
 }
 
@@ -134,13 +137,14 @@ if (games === 1 && type === 3 && typeStep==null) {
 
 if (games === 1 && type === 3 && dificulity==null) {
   return (
-    
-    <div>
-      <h1>Izaberite opciju</h1>
+    <> 
+    <h1>Izaberite opciju</h1>
+    <div className='btnCon2'>
       <button onClick={() => setDificulity(1)}>Lako</button>
       <button onClick={() => setDificulity(2)}>Srednje</button>
       <button onClick={() => setDificulity(3)}>Tesko</button>
     </div>
+    </>
   );
 }
 
@@ -181,13 +185,13 @@ setDif(null)
    <p>{data.message}</p>*/
   return (
     <>
-  <div>
-  <button  onClick={()=>{setGames(0)
+  <div className='btn-container'>
+  <button   className={'game-btn'+(games===0 ? ' active':'')}   onClick={()=>{setGames(0)
   setType(null)
   setDificulity(null)
   setTypeStep(null)
   }}>Pytnik</button>
-<button  onClick={()=>{setGames(1)
+<button  className={'game-btn'+(games===1 ? ' active':'')}    onClick={()=>{setGames(1)
 setType(null)
 setDificulity(null)
 setTypeStep(null)

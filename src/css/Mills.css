@@ -15,10 +15,16 @@ stroke:black;
 stroke-width: 0.3;
 
 }
-
+.boardCircle
+{
+    r:0.7;
+    transition:  r 150ms ease-in-out;
+}
 .boardCircle:hover {
 
 
-    stroke:black;
+    stroke:var(--player);
+    fill: var(--player);
+    r:2;
     cursor: pointer;
 }
