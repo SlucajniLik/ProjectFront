@@ -152,7 +152,8 @@ const[prevValidPieceColor,setPrevValidPieceColor]=useState([])
 const [prevRemoveTempPiece, setPrevRemoveTempPiece] = useState([]);
 const [prevWinner,sepPrevWinner]=useState([])
 const [prevGameOver,setPrevGameOver]=useState([])
-
+var url='https://project-backend-zadnji-vestacka.vercel.app'
+//url='http://127.0.0.1:8000'
 useEffect(()=>
 {
     
@@ -201,7 +202,7 @@ setPrevGameOver(prev=>[...prev,gameOver])
   const game=transformToMatrix()
   console.log('pocetna matrica'+JSON.stringify(game))
   console.log(color,removedPiece+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPPPPP")
-    axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
+    axios.post(url+'/Games/Mills/',game).then(
      
        res=>{
          console.log("Ovo je potez:"+res.data.move)
@@ -613,7 +614,7 @@ if(typeStep==2)
      const game=transformToMatrix()
      console.log('pocetna matrica'+JSON.stringify(game))
     
-       axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
+       axios.post(url+'/Games/Mills/',game).then(
         
           res=>{
             
@@ -743,7 +744,7 @@ useEffect(() => {
      const game=transformToMatrix()
      console.log('pocetna matrica'+JSON.stringify(game))
     
-       axios.post('http://127.0.0.1:8000/Games/Mills/',game).then(
+       axios.post(url+'/Games/Mills/',game).then(
         
           res=>{
             
