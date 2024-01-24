@@ -29,8 +29,8 @@ const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
 const [pause,setPause]=useState(false)
 const [gameOver,setGameOver]=useState("")
 var graph;
-var url='https://project-backend-zadnji-vestacka.vercel.app'
-//url=http://127.0.0.1:8000
+//var url='https://project-backend-zadnji-vestacka.vercel.app'
+var url='http://127.0.0.1:8000'
 
 const [collected, setCollected] = useState(new Array(map.length).fill(false));
 var tmIdArr=[]
@@ -38,7 +38,7 @@ useEffect(
   ()=>{
   
     graph=createMatrixFromExisting(map)
-   
+   console.log("Ovde je agent: "+agent+" "+"Ovde je graph: "+JSON.stringify(graph)+"\n Ovde je map: "+map)
      axios.post(url+'/Games/Search/',{name:agent,matrix:graph}).then(
       
         res=>{
@@ -388,13 +388,6 @@ setCollected(new Array(map.length).fill(false))
 setPause(false)
 setGameOver("")
 }}   >Jocke</button>
-<button  onClick={()=>{setAgent("Micko") 
-setStepsTaken([])
-setCurrentStep(0) 
-setCollected(new Array(map.length).fill(false))
-setPause(false)
-setGameOver("")
- }}   >Micko</button>
 <button  onClick={()=>{setAgent("Uki")
 setStepsTaken([])
 setCurrentStep(0)
@@ -403,6 +396,13 @@ setPause(false)
 setGameOver("")
 
 }}   >Uki</button>
+<button  onClick={()=>{setAgent("Micko") 
+setStepsTaken([])
+setCurrentStep(0) 
+setCollected(new Array(map.length).fill(false))
+setPause(false)
+setGameOver("")
+ }}   >Micko</button>
 </div>
 
 
