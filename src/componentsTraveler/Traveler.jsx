@@ -29,8 +29,8 @@ const agentPosition={x:map[currentCoin][0],y:map[currentCoin][1]}
 const [pause,setPause]=useState(false)
 const [gameOver,setGameOver]=useState("")
 var graph;
-//var url='https://project-backend-zadnji-vestacka.vercel.app'
-var url='http://127.0.0.1:8000'
+var url='https://project-backend-zadnji-vestacka.vercel.app'
+//var url='http://127.0.0.1:8000'
 
 const [collected, setCollected] = useState(new Array(map.length).fill(false));
 var tmIdArr=[]

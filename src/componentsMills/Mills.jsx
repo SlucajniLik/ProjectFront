@@ -152,8 +152,8 @@ const[prevValidPieceColor,setPrevValidPieceColor]=useState([])
 const [prevRemoveTempPiece, setPrevRemoveTempPiece] = useState([]);
 const [prevWinner,sepPrevWinner]=useState([])
 const [prevGameOver,setPrevGameOver]=useState([])
-//var url='https://project-backend-zadnji-vestacka.vercel.app'
-var url='http://127.0.0.1:8000'
+var url='https://project-backend-zadnji-vestacka.vercel.app'
+//var url='http://127.0.0.1:8000'
 useEffect(()=>
 {
     
